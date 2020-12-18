@@ -1,0 +1,5 @@
+{ ['label'] = 'Hyperlink test page',
+{ 0, 4, 2, 0x00FF00, 0x000000, "Hyperlink OK!"},
+{ 0, 1, 4, 0xFFFFFF, 0x000000, "YEP, hyperlink is working."},
+{ 1, 4, 8, false, 0xFFFFFF, 0xFF0000, "Go back", ".."},
+{ 0, 1, 13, 0x00FFFF, 0x000000, "Site hosting by OWN Web-Site Server v0.15 on OpenOS 1.7.5 © 2020 Compys S&N Systems"} }
