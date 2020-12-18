@@ -1,5 +1,5 @@
-{ ['label'] = 'Welcome to Compys NFP website',
-{ 0, 4, 2, 0x00FF00, 0x000000, "Welcome to Compys website - The first on-line page for OpenComputers"},
+{ ['label'] = 'Welcome to Compys Website',
+{ 0, 4, 2, 0x00FF00, 0x000000, "Welcome to Compys Website - The first on-line page for OpenComputers"},
 { 0, 1, 4, 0xFFFFFF, 0x000000, "In future, this site will be filled))."},
 { 1, 4, 8, false, 0xFFFFFF, 0xFF0000, "Click here to test hyperlink function.", "../htext/hyperlink.nfp"},
 { 1, 8, 10, false, 0xFFFFFF, 0xFF0000, "Click here to test hyperlink function (second reference).", "../htext/hyperlink2.nfp"},
