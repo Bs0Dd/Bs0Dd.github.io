@@ -1,5 +1,5 @@
-{ ['label']= "Page under construction!",
-{ 0, 4, 2, 0xFF0000, 0x000000, "[Sorry, it's empty here!]"},
-{ 0, 1, 4, 0xFFFFFF, 0x000000, "This is just a stub page. When the real one will be, I don't know..."},
-{ 1, 1, 6, false, 0xFFFFFF, 0xFF0000, "<< Go to Main page", "../index.nfp"},
+{ ['label']= "Страница в разработке!",
+{ 0, 4, 2, 0xFF0000, 0x000000, "[Увы, здесь пока еще пусто!]"},
+{ 0, 1, 4, 0xFFFFFF, 0x000000, "Это просто страница-заглушка. Когда будет настоящая, не знаю..."},
+{ 1, 1, 6, false, 0xFFFFFF, 0xFF0000, "<< На главную", "../russian.nfp"},
 { 0, 1, 9, 0x00FFFF, 0x000000, "Site hosting on GitHub Pages © 2020 Compys S&N Systems"} }
