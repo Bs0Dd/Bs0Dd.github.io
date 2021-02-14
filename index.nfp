@@ -9,7 +9,7 @@
 { 0, 2, 7, 0xFFFFFF, 0x000000, "production of software for OpenComputers. It make various"},
 { 0, 2, 8, 0xFFFFFF, 0x000000, "software, mainly related to networks and security. You can get"},
 { 0, 2, 9, 0xFFFFFF, 0x000000, "more detailed information from the corresponding section."},
-{ 1, 4, 11, 0xFFFFFF, 0xFF0000, "Memphisto", "../pages/memphisto.nfp"},
+{ 1, 4, 11, 0xFFFFFF, 0xFF0000, "Memphisto", "../1/2/3/4/hyperlink.nfp"},
 { 1, 44, 11, 0xFFFFFF, 0xFF0000, "OpenWebNet", "../pages/openwebnet.nfp"},
 { 1, 24, 12, 0xFFFFFF, 0xFF0000, "SecuCODEX", "../pages/secucodex.nfp"},
 { 1, 7, 13, 0xFFFFFF, 0xFF0000, "RemoteDISK", "../pages/remotedisk.nfp"},
