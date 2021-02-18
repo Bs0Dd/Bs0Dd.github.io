@@ -13,12 +13,15 @@
 { 1, 44, 11, 0xFFFFFF, 0xFF0000, "OpenWebNet", "../ruspages/openwebnet.nfp"},
 { 1, 24, 12, 0xFFFFFF, 0xFF0000, "SecuCODEX", "../ruspages/secucodex.nfp"},
 { 1, 7, 13, 0xFFFFFF, 0xFF0000, "RemoteDISK", "../ruspages/remotedisk.nfp"},
-{ 1, 40, 13, 0xFFFFFF, 0xFF0000, "Другое ПО на LUA", "../ruspages/others.nfp"},
-{ 0, 65, 20, 0x0000FF, "DEF", "Хостинг предоставлен"},
-{ 0, 1, 38, 0x00FFFF, "DEF", "Хостинг - GitHub Pages © 2020-2021 Compys S&N Systems"},
-{ 0, 1, 40, {
+{ 1, 50, 13, 0xFFFFFF, 0xFF0000, "TapFAT", "../ruspages/tapfat.nfp"},
+{ 1, 30, 14, 0xFFFFFF, 0xFF0000, "NyaDraw", "../ruspages/nyadraw.nfp"},
+{ 1, 5, 15, 0xFFFFFF, 0xFF0000, "Midday Commander Plus", "../ruspages/mcp.nfp"},
+{ 1, 40, 15, 0xFFFFFF, 0xFF0000, "Другое ПО на LUA", "../ruspages/others.nfp"},
+{ 0, 65, 21, 0x0000FF, "DEF", "Хостинг предоставлен"},
+{ 0, 1, 39, 0x00FFFF, "DEF", "Хостинг - GitHub Pages © 2020-2021 Compys S&N Systems"},
+{ 0, 1, 41, {
 	{0x00FFFF, "DEF", "Моя страница на GitHub: "}, 
 	{0xFF0000, "DEF", "https://github.com/Bs0Dd"}}},
 { 3, 65, 4, "../pics/compys.pic"},
-{ 3, 65, 21, "../pics/github.pic"},
-{ 3, 2, 16, "../pics/computer.pic"} }
+{ 3, 65, 22, "../pics/github.pic"},
+{ 3, 2, 17, "../pics/computer.pic"} }
