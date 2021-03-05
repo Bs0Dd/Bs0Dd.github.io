@@ -1,6 +1,6 @@
 { label= "Страница в разработке!",
 { 'text', 4, 2, 0xFF0000, "DEF", "[Увы, здесь пока еще пусто!]"},
 { 'text', 1, 4, 0xFFFFFF, "DEF", "Это просто страница-заглушка. Когда будет настоящая, не знаю..."},
-{ 'hyperlink', 1, 6, 0xFFFFFF, 0xFF0000, "<< На главную", "../russian.nfp"},
+{ 'link', 1, 6, 0xFFFFFF, 0xFF0000, "<< На главную", "../russian.nfp"},
 { 'border', 1, 8, 90, 0x00FFFF, "DEF", 'dpseudo'},
 { 'text', 1, 9, 0x00FFFF, "DEF", "Хостинг - GitHub Pages © 2020-2021 Compys S&N Systems"} }
