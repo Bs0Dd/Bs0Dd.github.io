@@ -1,0 +1,65 @@
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: auto;
+    width: 900px;
+    padding: 0;
+    text-align: center;
+    background-color: black;
+}
+
+#logo {
+    height: 175px;
+    background-image: url(logoc.png);
+    background-size: cover;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+    src='logoc.png',
+    sizingMethod='scale');
+}
+
+#tbd {
+    background-color: white;
+    height: 700px;
+    text-align: left;
+    vertical-align: top;
+}
+
+#copyr {
+    font-size: 12px;
+    color: white;
+    height: 90px;
+    background-image: url(backi.png);
+}
+
+h1 {
+    font-size: 27px;
+    color: white;
+    background-image: url(backinv.png);
+}
+
+input[type=button], input[type=submit], input[type=reset] {
+    background-color: black;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 10px 18px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.abutt {
+    background-color: black;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 10px 18px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+#copyr a {
+    color: grey;
+}
