@@ -1,0 +1,30 @@
+Type and description                   Product code
+-----------------------------------------------------
+NHE–4NX (Nokia 2110)                   0500312
+NHE–4NX (Nokia 2110, Greece)           0500433
+NHE–4NX (2110 SIP)                     0500435
+NHE–4NX (Nokia Handyphone)             0500436
+NHE–4NX (Nokia 2110, D2)               0500434
+NHE–4NX (Nokia 2110, Omnitel)          0500525
+NHE–4NX (Nokia 2110 Network Monitor)   0500549
+NHE–4NX (Nokia 2110, D1)               0500562
+NHE–4NX (Nokia 2110, Airtel)           0500563
+NHE–4NX (Nokia 2110, PRC)              0500564
+NHE–4NX (Nokia 2110, Movistar)         0500585
+NHE–4NX (Nokia 2110, Itineris)         0500625
+NHE–4NX (Nokia 2110, System)           0500626
+NHE–4NX (Nokia 2110, Korea)            0500629
+NHE–4NX (Nokia 2110 SIM Lockable)      0500663
+NHE–4NX (Nokia 2110, XMAS)             0501048
+NHE–4NX (Nokia N2110 Plus)             0501133
+NHE–4NX (Nokia N2110 Pannon Hungary)   0501152
+NHE–4NY (Nokia 2118, blue)             0500314
+NHE–4NY (Nokia 2118, black)            0500557
+NHE–4NY (Nokia 2118 PRC)               0500952
+NHE–4NY (Nokia 2118, black)            0500960
+NHE–4AX (Nokia 5000)                   0500318
+NHE–4AX (Mobira 5000)                  0500533
+NHE–4AX (Pocketline Darwin)            0500439
+NHE–4BX (Nokia 880)                    0500316
+NHE–4BX (Nokia 880, Greece)            0500475
+NHE–4NC (Nokia 2114)                   0500693

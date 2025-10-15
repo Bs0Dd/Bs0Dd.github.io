@@ -1,0 +1,242 @@
+<h1 align="CENTER">Re: Nokia protocols documentation</h1>
+<hr>
+<p>
+<strong>Marcel Holtmann</strong> (<a href="mailto:marcel@rvs.uni-bielefeld.de?subject=Re:%20Nokia%20protocols%20documentation"><em>marcel@rvs.uni-bielefeld.de</em></a>)<br>
+<em>Mon, 13 Sep 1999 14:33:35 +0200</em>
+</p>
+<hr>
+<p>
+<em>&gt;
+</em><br>
+<em>&gt; Could someone please direct me to any existing documentation for the
+</em><br>
+<em>&gt; protocol (preferably not just source for Gnokii)? This would help me get up
+</em><br>
+<em>&gt; to speed as quickly as possible, of course.
+</em><br>
+<em>&gt;
+</em><br>
+<em>&gt; If someone can also point out what aspects of the protocol remain to be
+</em><br>
+<em>&gt; investigated (if it isn't already obvious) I will focus my efforts there.
+</em><br>
+<em>&gt;
+</em><br>
+<em>&gt;
+</em><br>
+</p><p>There was some time ago a posting on this list. I attached it to this E-Mail.
+<br>
+But this is old and could be expanded with the features gnokii has grown up in
+<br>
+the meantime. I would set up a website end of this week or maybe next week
+<br>
+with the protocol of the fbus based on this document and the functions gnokii
+<br>
+have and some experiences done by my self.
+<br>
+</p><p>Theres another document on Pavels ftp site, where he started to descripe the
+<br>
+acting of the NCDS and some protocol specs. This should be completed also.
+<br>
+BTW can you put the verdana fonts you use in the directory too, so that other
+<br>
+people can complete the document.
+<br>
+</p><p>Marcel
+<br>
+</p><p></p><p></p><p>
+Message types:
+<br>
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;Format:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hex: Short description
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x msg desc                { ... }
+<br>
+</p><p></p><p>&nbsp;&nbsp;&nbsp;&nbsp;hex: message type
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x:   s=send (eg. to mobile), r=receive
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{ ... }: data after 0x00, 0x01, 0x00 header
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{+... }: raw data (without header)
+<br>
+</p><p>0x01: Call Information
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s voice call            { 0x01, "numbers", 5, 1, 1, 5, 81, 1, 0, 0, 1 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s data call             { 0x01, "numbers", 1, 2,
+ 1, 5, 81, 1, 0, 0, 1, 2, 10, 7,162, 136, 129, 33, 21,99, 168, 0, 0 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r missed call           { 0x04, seqnr }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r incoming call alert   { 0x05, seqnr, numlen, "number", namelen, "name" }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r answered call         { 0x07, seqnr }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r terminated call       { 0x09, seqnr }
+<br>
+0x02: SMS handling
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s Send SMS message      { 0x01, 0x02, 0x00 (SEND REQUEST), ... }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r Message sent          { 0x02 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r Send failed           { 0x03 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s Get SMS message       { 0x07, 0x02, location, 0x01, 0x64 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s Initiate connection   { 0x0d, 0x00, 0x00, 0x02 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r SMS message received  { 0x10, ...... } (whole message)
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s Get SMS center        { 0x33, 0x64, priority }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r SMS center received   { 0x34, priority, ... } 21-&gt; smscenter number (BCD), 33-&gt; smscenter name
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r SMS center error recv { 0x35 }
+<br>
+0x03: Phonebook functions
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s Get mem location      { 0x01, memtype, location, 0 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r mem location recvd    { 0x02, memtype, namelen,"name",numlen,"number",group }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r mem loc error recvd   { 0x03, errtype }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;errtype: 0x7d: invalid memory type
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s Set mem location      { 0x04, memtype, location,namelen,"Name",numlen,"number", 0xff }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r mem set OK            { 0x05 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r mem set error         { 0x06, errtype }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;errtype: 0x7d: name is too long
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s Mem status request    { 0x07, memtype }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r Mem status recvd      { 0x08, memtype, free, used }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r Mem status error recv { 0x09, errtype }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;errtype: 0x6f: mem status error
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x7d: invalid memory type
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x8d: waiting for pin
+<br>
+0x04: Phone Status
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s request               { 0x01 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r recvd                 { 0x02, mode, signal str, ???, pwr, batt.level }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode: 1: registered within the network
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2: call in progress
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3: waiting for pin
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4: powered off
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pwr: 1: AC/DC
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2: battery
+<br>
+0x08: PIN request
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r pin recvd             { 0x08, accepted }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;accepted: 0x0c: OK
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s entering pin          { 0x0a, 0x02, "PIN", 0x00 }
+<br>
+0x0a: Network status
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r network registration  10-&gt;cellID(2B), 12-&gt;LAC(2B), 14-&gt;netcode(3B)
+<br>
+0x0d: Keylock
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r keylock status        6-&gt;(==2: on)
+<br>
+0x11: Phone clock &amp; alarm
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s set date and time     { 0x60, 1,1,7,yearh,yearl,month,mday,hour,min,0x00 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r date and time set     { 0x61 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s get date and time     { 0x62 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r date and time recvd   { 0x63,?,?,?,?,yearh,yearl,month,mday,hour,min,second }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s set alarm             { 0x6b, 1,32,3,0x02(on-off),hour,min,0x00 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r alarm set             { 0x6c }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s get alarm             { 0x6d }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r alarm received        { 0x6e,?,?,?,?,alrm(==2:on),hour,min }
+<br>
+0x12: Connect to NBS port
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s Send                  {+0x0c, 0x01, 0x06, 0x05, 0x04,destporth,destportl,srcporth,srcportl,...
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(without 0,1,0 header  -- for oplogo, cli, ringtone etc upload)
+<br>
+0x13:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s Calendar notes set    { 0x66... }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r Calendar note recvd   { 0x67... }
+<br>
+0x14: SMS funcs
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r SMS message frame rcv { 0x08,subtype,?,num,?,BCD(smscenter)...} 20-&gt;type, 22-&gt;status
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type: 0x06: delivery report 
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status:
+ 0x00: delivered
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x30:
+ pending
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x46:
+ failed
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x09: reading failed
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subtype:
+ 0x02: invalid mem type
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x07:
+ empty SMS location
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s Delete SMS message    { 0x0a, 0x02, location }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r Delete OK             { 0x0b }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s SMS status request    { 0x36, 0x64 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r SMS status            { 0x37,?,?,?,?,?,?,msgnumber,unread }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r SMS status error      { 0x38 }
+<br>
+0x64:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;s Phone ID request      { 0x10 }
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r Phone ID recvd        { "NOKIA", "imei", 0, 
+"model", 0, "prod.code", 0, "HW", 0, "firmware", magic bytes x 4 ... }
+<br>
+0x7f: Acknowledge           {+type, seq }
+<br>
+0xd0: Power on message seq 1 (receive only)
+<br>
+0xf4: Power on message seq 2 (receive only)
+<br>
+</p><p>
+</p><hr>

@@ -1,0 +1,591 @@
+<h1>Dumps of phone&lt;&gt;PC traffic</h1>
+<hr>
+
+<ul>
+<li><em>To</em>: <a href="mailto:nokia@multivac.fatburen.org">nokia@multivac.fatburen.org</a></li>
+<li><em>Subject</em>: Dumps of phone&lt;&gt;PC traffic</li>
+<li><em>From</em>: Colin Paton &lt;<a href="mailto:colinp@tardis.ed.ac.uk">colinp@tardis.ed.ac.uk</a>&gt;</li>
+<li><em>Date</em>: Mon, 18 Jan 1999 17:50:55 GMT</li>
+<li><em>Sender</em>: <a href="mailto:owner-nokia@multivac.fatburen.org">owner-nokia@multivac.fatburen.org</a></li>
+</ul>
+<hr>
+<pre>Hi all,
+
+This message is around 20k long - apologies if it is clogging up your mailboxes
+but I thought that many people might be interested in it. I'm still trying
+to draw a circuit diagram of my 'simple' PC interface so I can publish it,
+but I'll keep you informed!
+
+I had a go on Saturday at sending various AT commands to my phone in order to
+see what was transmitted. I've had a go at decoding some of this information,
+but much of it is still to be worked on. I'm not making any promises about
+the bytes I've decoded - I thought people would be interested to see what
+I've found so far - maybe somebody else might have inspiration as to the 
+purpose of some of the bytes.
+
+I haven't managed to capture two way traffic yet - the first part of this
+file shows traffic from the phone to the PC - I reversed the connection 
+later on and have shown traffic from the PC to the phone.
+
+Anyway, here are the dumps.. have fun(!)
+
+I'm intrigued by the meaning of the last byte in the frame - can anybody
+decipher this one?
+
+My plan is to have a go at writing a program to send and receive formatted
+frames to the phone in order to try and make a connection. Hopefully then
+I can extend it to do something useless like display battery level and 
+signal strength, Cell ID etc etc. If anybody is an expert at Pilot programming
+and fancies trying this then let me know how you get on!
+
+Colin
+
+----------
+Nokia 6100 Series Phone to PC protocol
+
+
+Communication detail
+
+Communication takes part at 115200 baud, 8N1
+
+
+
+Frame format
+
+Frames are transmitted as follows:
+
++--+---+---+---+--+---+----------+---+----+------+--+
+|1E|DST|SRC|Typ|00|LEN|Data frame|SEQ|data|CHKSUM|??|
++--+---+---+---+--+---+----------+---+----+------+--+
+
+The PC appears to use address '0C'; the phone address '00'
+
+Where LEN is the length of the data frame
+Where Typ is:
+
+01 - Call control (Dial, incoming call received etc)
+02 - General phone control?
+03 - Sending and retrieving phone book entries
+04 - Phone status (signal strength+battery level)
+06 - Calling line restriction/Call forwarding etc
+08 - PIN code
+09 - Unsure - Registered OK with network?
+0A - Network registration status (Also CellID+LAC)
+0D - Something to do with call control
+11 - Phone clock and alarm
+14 - SMS messaging (and cell broadcast?)
+41 - Snake game
+64 - Exchange Product ID and serial number
+7F - Acknowledgement
+D0 - Connect?
+DA - Connect?
+
+The 'LEN' frame indicates the length of the information field within the frame. This
+indicates the length of the frame minus the 1E start indicator, address fields and
+checksums etc.
+
+The '1E' appears to be a 'start of frame' indicator; curiously this seems to be '1C' over
+infra-red.
+The '0C' and '00' next two bytes appear to be source and destination addresses.
+
+I'm not too sure about the last two bytes; one of them is a checksum. The checksum appears
+to be calculated by XORing all the bytes in the frame. It is therefore posible to check
+that a frame has been received correctly by XORing all the bytes received; an answer of
+0 means that the frame has been received correctly - a non-zero answer means incorrect
+reception.
+
+Certain frames appear to have a byte after the checksum - not quite sure what this is.
+
+The communication format appears to be:
+
+&lt;Computer sends information frame to phone&gt;
+&lt;Phone sends '7F' acknowledgement frame to computer&gt;
+
+
+
+-----------
+
+Startup and connection sequence:
+
+Power-on:
+
+When phone is powered on with NCDS not running it sends:
+
+1E FF 00 D0 00 03 01 01 E0 00 FF 2D
+1E 14 00 14 00 01 03 00 1D E1
+
+When a connection is opened to the virtual modem, the phone sends:
+
+1E 0C 00 7F 00 02 02 00 1C 71
+1E 0C 00 02 00 06 01 88 00 0E 01 41 1E 4F
+1E 0C 00 7F 00 02 02 80 1C F1
+1E 0C 00 7F 00 02 02 01 9C 70
+1E 0C 00 02 00 06 01 08 00 0E 01 42 1E 4C
+1E 0C 00 7F 00 02 64 02 7A 73
+1E 0C 00 7F 00 02 01 03 1F 72
+1E 0C 00 7F 00 02 81 04 1F 75
+1E 0C 00 64 00 38 01 08 00 11 4E 4F 4B 49 41 34 39 33 30 30 32 31 30 32 32 30 30 00 20 33 >>
+                                                      >> 2E 30 32 00 78 67 9E 0B 01 43 FE 51
+(The string is 'NOKIA493002102200'/' 3.02')
+1E 0C 00 01 00 07 01 08 00 44 97 01 44 00 CC 47
+1E 0C 00 7F 00 02 64 05 7A 74
+1E 0C 00 01 00 07 01 08 00 44 97 01 45 00 CD 47
+1E 0C 00 7F 00 02 04 80 1A F1
+1E 0C 00 04 00 0E 01 88 00 06 E8 EF DF F1 01 01 01 20 01 46 29 71
+1E 0C 00 7F 00 02 64 00 7A F1
+
+When PIN is entered, sends:
+
+1E 0C 00 04 00 0E 01 88 00 06 E8 EF DF F1 01 01 01 20 01 46 29 71
+
+
+
+Frame explanation:
+
+-------------------------------------------------------------------------------
+01 - Call control
+
+I think frames that dial numbers, etc have this as their 'type' field.
+
+When an incoming call is received, the phone sends the following frame. This frame
+contains the incoming phone number along with a string containing the name (if any)
+resolved from the phone book.
+
+Incoming call
+
+1E 0C 00 01 00 26 01 08 00 05 01 05 0A 30 34 31 33 31 37 37 37 36 31 0D 43 65 6C 6C 6E 65 >>
+                                          >> 74 20 F0 68 6F 6E 65 01 03 02 91 00 81 45 FE 12
+
+I.E.
+
+1E 0C 00 01 00 26 01 08 00 05 01 05 0&lt;Numlength&gt; '0413177762' &lt;Name length&gt; 'Cellnet Phone'
+                                                              >> 01 03 02 91 00 81 45 FE 12
+
+No further messages are sent while phone is ringing.
+
+When call is terminated without answer, phone sends:
+
+1E 0C 00 0D 00 09 01 08 00 52 01 01 02 01 43 00 5F 52
+1E 0C 00 01 00 0A 01 08 00 04 02 65 10 00 01 44 0C 2A
+1E 0C 00 0D 00 09 01 08 00 52 01 01 81 01 45 00 5A 52
+1E 0C 00 0A 00 15 01 08 00 71 01 00 01 0B 01 02 06 61 00 17 32 32 F4 51 00 00 01 C6 00 3D E0
+
+
+
+-------------------------------------------------------------------------------
+02 - General phone control?
+
+Frames of this type appear to do 'general' things, such as instruct the phone to
+power-off, etc.
+
+They also appear to be used to connect to the phone, etc.
+
+-------------------------------------------------------------------------------
+03 - Sending and retrieving phone book entries
+
+Phone book entries:
+
+Sending 'AT+CPBS=?' to list phonebook types prints:
++CPBS: ("ME","SM","TA","FD","ON","EN","MC","DC","RC")
+without sending anything to the phone.
+
+Sending 'AT+CPBS="ME"' to select phone memory sends nothing to the phone.
+
+Sending 'AT+CPBR=?' to list phone book index range and lengths prints:
++CPBR: (1-150),30,16
+
+and the phone returns:
+
+1C 0C 7F 00 02 03 80 1D F1
+1E 0C 00 03 00 09 01 08 00 08 02 94 82 01 40 00 5F 93
+
+Sending the same, with the SIM selected prints:
++CPBR: (1-100),20,8
+
+and the phone returns:
+1C 0C 7F 00 02 03 01 1D 70
+1C 0C 00 03 00 09 01 88 00 08 03 2F 35 01 41 00 E8 28
+                              ^^--- Type of entry:
+
+Entry type:
+02 = Phone memory
+03 = Sim memory
+04 = Sim fixed-dialling phonebook
+05 = 'ON'
+7D = Requested type not supported
+?? = 'FD' last dialled numbers?
+
+With 'ON' selected:
+1E 0C 00 03 00 09 01 88 00 08 05 01 00 01 46 00 5C 06 prints: (1-1),20,8
+
+
+*** TRY THIS WITH AN ORANGE/CELLNET SIM TO SEE IF THERE IS ANY DIFFERENCE ***
+
+
+Reading phonebook entries:
+
+With Sim selected, sending 'at+cpbr=1' to retrieve the first entry retrives:
+
+(The name and number have been changed!)
+
++CPBR: 1,"01311234567",129,"Sara Gxxxxxx"
+
+1E 0C 00 03 00 22 01 08 00 02 00 0C 53 61 72 61 20 47 XX XX XX XX XX XX 0B 30 31 33 31 36 >>
+                                                      >> 36 37 XX XX XX XX 05 00 01 47 48 4C
+
+Therefore, phonebook entries are returned as:
+1E 0C 00 03 00 24 01 08 00 02 00 &lt;Name length&gt;&lt;Name String&gt;&lt;Number length&gt;&lt;Number string&gt; >>
+                                                                        >> 05 00 01 XX XX XX
+
+This frame does not appear to indicate the source/number of the entry - presumably this
+is specified in the request.
+
+-------------------------------------------------------------------------------
+04 - Phone status
+
+This appears to indicate the signal strength level, whether a call is in 
+progress, etc.
+
+1E 0C 00 04 00 0B 01 08 00 02 01 01 63 02 03 01 40 00 3E 0B
+                              ^^ ^^       ^^    ^^    ^^- Checksum
+                            Mode  Sig    Batt   Sequence
+                                  Strngth        number
+
+'Signal strength' appears to correspond to the number of 'bars' on the display.
+'Batt' appears to correspond to the number of 'bars' on the display of the battery
+strength indicator.
+
+The phone only appears to give battery and signal strength indication on a level of 0,1,2,3
+
+'Mode' appears to be:
+
+01 - Call not in progress
+02 - Call in progress
+03 - Not registered on network/no coverage
+
+There is probably an indication of whether the phone is charging; I haven't tried this.
+
+-------------------------------------------------------------------------------
+06 - Calling line restriction/call forwarding etc
+
+AT+CLIR?
+
+Phone sends:
+
+1E 0C 00 7F 00 02 06 01 18 70
+&lt;Transmits to network&gt;
+1E 0C 00 06 00 0E 01 08 00 02 05 80 1F 02 00 04 05 02 01 46 01 4C
+Prints:
++CLIR: 0,4
+
+Sending 'AT+COLP?' immediately afterwards causes no phone traffic,
+therefore it is assumed that the information is contained in the frame above.
+
+Advice of charge (not supported in SIM)
+
+Phone sends:
+1E 0C 00 7F 00 02 07 05 19 74
+1E 0C 00 07 00 07 01 08 00 24 78 01 43 00 24 21
+
+AT+CCFC (Call forwarding)
+
+Sending 'AT+CCFC=2,1,"12345678"
+
+Phone sends:
+1E 0C 00 7F 00 02 06 07 18 F6
+&lt;Transmits to network&gt;
+1E 0C 00 06 00 09 01 08 00 03 02 02 10 01 46 00 4B 0B
+
+
+
+-------------------------------------------------------------------------------
+08 - PIN code
+
+Sending AT+CPIN="XXXX"
+
+Returns:
+
+1E 0C 00 7F 00 02 08 01 16 70
+1E 0C 00 08 00 07 01 08 00 08 06 01 45 00 5C 02 for correct pin, and
+1E 0C 00 08 00 07 01 08 00 0C 88 01 42 00 D5 06 for incorrect PIN
+1E 0C 00 08 00 07 01 08 00 08 06 01 40 00 59 02 for correct pin when already entered
+
+
+Sending AT+CDIS?
+
+Returns:
+
+1E 0C 00 7F 00 02 0C 00 12 71
+1E 0C 00 7F 00 02 0C 01 12 70
+1E 0C 00 7F 00 02 0C 02 12 73
+
+
+
+-------------------------------------------------------------------------------
+09 - Registered OK with network?
+
+Phone sends this after PIN code is entered. Think this might mean 
+'registered OK with network.'
+
+0C 00 09 00 06 01 08 00 80 01 46
+
+-------------------------------------------------------------------------------
+0A - Network registration status (Also CellID+LAC)
+
+Network: UK Vodafone
+Channel '45', CellID '0661', Lac '0017', T3212 006, AcsClas 0000, BS-PA-MFRM 7
+
+After registering, phone sends:
+
+1E 0C 00 0A 00 0C 01 08 00 71 01 00 01 02 03 02 81 47 1D 34
+1E 0C 00 0A 00 15 01 08 00 71 01 00 01 0B 01 02 06 61 00 17 32 F4 51 00 00 01 40 00 3B E0
+               ^^                               ^^^^^ ^^^^^
+             Short/long format?                 Cell  LAC
+                                                 ID
+Not sure what the difference between the two formats (short and long) is.
+
+
+Not sure what the next 3 bytes after LAC mean:
+
+32F401 for UK Cellnet (Cellnet is 234-10)
+32F451 for UK Vodafone(Vodafone is 234-15)
+
+
+The phone sends a 'long' format frame with the new LAC and cell ID every time it transfers
+to a different cell.
+
+
+
+-------------------------------------------------------------------------------
+0D - Something to do with call control
+
+
+-------------------------------------------------------------------------------
+11 - Phone clock and alarm
+
+Sending: AT+CCLK?
+Returns:
+
+1E 0C 00 11 00 11 01 08 80 63 01 01 01 07 07 CF 01 10 17 23 19 01 C1 00 56 9C
+ .  .  .  .  .  .  .  .  .  ..  .  .  .  .  .YR MN DY HR MN SC
+
+YR = Year, MN = Month, DY = Day, HR = Hr, MN = Minute, 19 = SEC
+
+Where YR = CF for 1999
+Where YR = CB for 1995
+Where YR = D2 for 2002 
+
+Sending AT+CALA? To query the alarm time responds:
+
+1E 0C 00 7F 00 02 11 07 0F 76
+1E 0C 00 11 00 0D 01 08 00 6E 01 01 20 03 02 08 14 01 44 00 EC 78
+                                          AA HR MN SC?
+
+When the alarm time is: 08.20 and the alarm is switched on.
+AA: 02 = on, 01 = off (02=on here)
+HR: Hour of alarm time (24 hour clock: 0E = 2pm for example)
+Here, HR = 08 = 8am
+MN: Minute of alarm time
+Here, Mn = 14 = 20minutes -&gt; time is 08.20
+SC: Don't know, but could be seconds?
+
+
+-------------------------------------------------------------------------------
+14 - SMS messaging (? and cell broadcast?)
+
+More to follow... It appears that the phone uses a funny character set when
+transferring SMS messages; I believe that SMS messages use 7-bit characters
+which are compacted into 8-bit bytes. Further investigation is needed here.
+
+-------------------------------------------------------------------------------
+41 - Snake game
+
+Still not completely sure about this - when eavesdropping a 2-player snake
+game the phone transmits this as its 'information type'.
+
+-------------------------------------------------------------------------------
+64 - Exchange Product ID, version and IMEI
+
+This appears to be used when the phone is connected to the PC. It appears to
+transmit the phone IMEI and software version.
+
+1E 0C 00 64 00 38 01 08 00 11 4E 4F 4B 49 41 34 39 33 30 30 32 32 30 32 32 30 30 00
+ 20 33 2E 30 32 00 78 67 9E 0B 01 43 FE 51
+(The string is 'NOKIA493002202200'/' 3.02')
+
+Request manufacturer ID (AT+CGMI)
+Request revision identification (AT+CGMR)
+Prints the string 'SW 3.02:HW2200'
+Request mode identification (AT+CGMM)
+Prints 'NSM-1'
+1E 0C 00 04 00 30 01 08 00 04 01 34 39 33 30 30 32 31 30 30 32 32 32 35 35 33 00 
+   4E 53 4D 2D 31 00 30 35 30 31 38 38 B8 00 32 32 B0 30 00 20 33 2E 30 32 00 01 C1 5D 44
+
+
+
+-------------------------------------------------------------------------------
+7F - Acknowledgement
+
+Acknowledgement frames are always sent upon successful reception of a data frame.
+The acknowledgement frame information field always seems to be 2 bytes long and
+carries the 'frame type' indication of the received frame, and the sequence number
+of the received frame.
+
+i.e
+1E 0C 00 7F 00 02 04 07 1A 76
+         ^^ ^^^^^ ^^ ^^ 
+          +   +    +  +------- Sequence number of frame being acknowledged
+          |   |    ----------- Frame type of the frame being acknowledged
+          |   +--------------- Information length (always 2 for ack frame)
+          -------------------- Frame type: 7F = acknowledge
+
+-------------------------------------------------------------------------------
+D0 - Connect?
+DA - Connect?
+
+To be investigated - sent over infra-red while playing snake.
+
+
+
+Sequence needed to achieve a connection:
+
+At power-on, with no PC software running, the phone sends: 
+
+1E FF 00 D0 00 03 01 01 E0 00 FF 2D
+1E 14 00 F4 00 01 03 00 1D E1
+
+If the PC modem software is running, it appears to ignore this.
+
+If the phone is powered off, then on again the modem does not appear to go through
+the whole exchange ID sequence. Typing 'AT+CSQ' to retrieve signal strength causes
+the following response from the phone:
+
+1E 0C 00 7F 00 02 04 80 1A 71
+1E 0C 00 04 00 0B 01 08 00 02 03 00 63 02 02 01 41 00 3C 0A
+
+The phone appears to be acknowledging a frame of type '02' - I suspect that only this
+frame needs to be sent to establish connection with the phone.
+
+A dump from PC-&gt;phone at this point shows:
+
+1E 00 0C 02 00 09 00 01 00 0D 00 00 02 01 40 00 50 06
+then..
+1E 00 0C 02 00 07 00 01 00 20 02 01 40 00 50 25
+1E 00 0C 7F 00 02 02 04 10 79
+1E 00 0C 02 00 09 00 01 00 0D 01 00 02 01
+
+
+The 'exchange ID' type frames need to be sent in order for the 'accessory connected'
+message to appear on the phone display.
+
+
+-------------------------------------------------------------------------------
+Transfer of information from PC to phone.
+
+The PC appears to send a burst of 0x55 bytes before each transmission.
+
+At first switch on, the PC sends:
+
+...55555555555 1E 00 0C 64 00 06 00 01 00 10 01 60 13 13...
+
+55 is binary 01010101 - maybe this is used so the phone can auto-detect the baud rate
+of the incoming signal, or synchronise the UART clock.
+
+When the phone hears this, it must respond..
+
+The dump at power-on is as follows:
+
+1E 00 0C 64 00 06 00 01 00 10 01 60 13 13
+1E 00 0C 7F 00 00 02 64 01 76 7C
+
+1E 00 0C 64 00 2F 00 01 00 12 7F 7E 7E 7C 74 7F FE 84 7D 00 7E 7C 74 7F FE FE 4E 4F 4B
+49 41 26 4E 4F 4B 49 41 20 61 63 63 65 73 73 6F 72 79 00 00 00 00 01 41 00 36 6C
+
+This contains the string: 'NOKIA&amp;NOKIA accessory'
+
+
+1E 00 0C 04 00 06 00 01 00 05 01 42 13 44
+1E 00 0C 7F 00 02 04 02 16 7F
+1E 00 0C 01 00 1A 00 01 00 42 05 01 07
+1E 00 0C 14 00 07 00 01 00 36 64 01 43 00 35 25
+1E 00 0C 7F 00 02 14 00 06 7D
+
+...etc
+
+Frames:
+
+Requesting battery charge/signal strength: +CBC
+
+1E 00 0C 04 00 06 00 01 00 01 01 41 13 43
+1E 00 0C 7F 00 02 04 03 16 7E              (Ack from phone response)
+
+Requesting time: at+cclk?
+
+1E 00 0C 11 00 06 00 01 00 62 01 42 13 36
+
+Requesting alarm time: at+cala?
+
+1E 00 0C 11 00 06 00 01 00 6D 01 44 13 3F
+
+Requesting product revision: at+cgmr?
+
+1E 00 0C 04 00 06 00 01 00 03 01 46 13 46
+(This is maybe just used as an 'Are you OK?' question.
+
+Request subscriber number: at+cnum?
+
+1E 00 0C 03 00 09 00 01 00 01 05 01 00 01 40 00 57 0A
+1E 00 0C 03 00 09 00 01 00 01 05 02 00 01 40 00 56 09
+1E 00 0C 03 00 09 00 01 00 01 05 03 00 01 40 00 55 08
+1E 00 0C 03 00 09 00 01 00 01 05 04 00 01 40 00 54 0F
+1E 00 0C 03 00 09 00 01 00 01 05 05 00 01 44 00 53 0E
+
+This prints five numbers on the display.
+
+Request registration status: at+creg?
+Request network status: at+cops?
+
+Request phone activity status: at+cpas
+
+1E 00 0C 04 00 06 00 01 00 01 01 47 13 43
+
+Send PIN: AT+CPIN="1234" (Pin changed from dump to 1234!)
+
+1E 00 0C 08 00 0D 00 01 00 0A 02 '1' '2' '3' '4' 00 00 01 43 00 50 0D
+                                 ^^^^^^^^^^^^^^^
+                                 Ascii chars
+
+-----------------
+AT+CPBR=1 etc...
+
+Read phonebook entry 1 from mobile:
+
+1E 00 0C 03 00 09 00 01 00 01 02 01 00 01 40 00 50 0A
+
+Read phonebook entry 2 from mobile:
+
+1E 00 0C 03 00 09 00 01 00 01 02 02 00 01 42 00 52 09
+
+Read phonebook entry 1 from SIM:
+
+frame format??:
+
+1E 00 0C 03 00 09 00 01 00 01 03 01 00 01 44 00 55 0A
+                              ^^ ^^- Entry number
+                               +---- Entry type
+
+Entry type:
+02 = Phone memory
+03 = Sim memory
+04 = Sim fixed-dialling phonebook
+
+The 'entry type' is the same as the received commands above.
+
+Requesting multiple entries: AT+CPBR=5,9 sends two frames:
+
+1E 00 0C 03 00 09 00 01 03 05 00 01 43 00 52 0E
+1E 00 0C 03 00 09 00 01 03 09 00 01 44 00 55 02
+
+</pre>
+
+<hr>

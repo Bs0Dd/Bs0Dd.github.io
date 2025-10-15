@@ -1,0 +1,92 @@
+<h1>6110: Frames of type 0x08 and 0x09</h1>
+Pavel Janik ml. (<i>Pavel.Janik@inet.cz</i>)<br>
+<i>07 Mar 1999 18:57:44 +0100</i>
+<hr>
+<!-- body="start" -->
+Hi all,<br>
+<p>
+sorry for bothering again with 6110 stuff, but I have observed some more<br>
+things about protocol and I do not want you to duplicate this work. I'd be<br>
+glad if someone (probably Richard?) can collect information about protocol<br>
+(from Richard's page, from Colin's mail and from this group).<br>
+</p><p>
+BTW - sorry for my english ;-)<br>
+</p><p>
+--- cut here ---<br>
+Frames of type 0x08 (PIN code)<br>
+</p><p>
+This type of the frame is used to enter PIN (Personal Identification Number=<br>
+).<br>
+</p><p>
+=091e 00 0c 08 00 0d 00 01 00 0a 02 "abcd" 00 00 01 41 00 xx yy<br>
+</p><p>
+"abcd" is the PIN. For example if your PIN is 1234 so "abcd" is 31 32 33<br>
+34. "xx yy" is the checksum.<br>
+</p><p>
+The above frame is send to mobile phone and it responds with an acknowledge<br>
+frame:<br>
+</p><p>
+=091e 0c 00 7f 00 02 08 01 16 70<br>
+</p><p>
+And one of the next frame from the phone is one of these:<br>
+</p><p>
+1. When the SIM card is not inserted, the phone displays "Insert SIM card" =<br>
+and<br>
+sends:<br>
+</p><p>
+=091e 0c 00 08 00 07 01 08 00 0c 6f 01 41 00 31 06<br>
+</p><p>
+2. When we are sending the PIN code when the phone has the message "Enter P=<br>
+IN<br>
+code:" on its display:<br>
+</p><p>
+=091e 0c 00 08 00 06 01 08 00 0b 01 41 1e 40<br>
+</p><p>
+This means that the entered PIN was correct - the phone displays the messag=<br>
+e<br>
+"Code accepted".<br>
+</p><p>
+3. When the PIN is incorrect or already entered, the phone responds with<br>
+</p><p>
+=091e 0c 00 08 00 07 01 08 00 0c 88 01 41 00 d6 06<br>
+</p><p>
+and it displays "Code error!" when the PIN is incorrect and the correct one=<br>
+ is<br>
+not already entered.<br>
+</p><p>
+This is somewhat different than Colin already reported. When the PIN is OK,<br>
+the respond message has length 0x06. Colin reported 0x07. Another differenc=<br>
+e<br>
+is when correct PIN frame is send when PIN is already entered. Colin said t=<br>
+hat<br>
+the respond frame is the same as if we send correct PIN. My tests showed th=<br>
+at<br>
+it is not. Weird. Can you tell us something about it?<br>
+</p><p>
+---------------------------------------------------------------------------=<br>
+</p><pre>--
+<p>
+Frames of type 0x09 (registering with the network)
+</p><p>
+When the PIN frame is sent the phone also sends this frame.
+</p><p>
+=091e 0c 00 09 00 06 01 08 00 80 01 42 1e c9
+</p><p>
+Colin Paton things that this means "registered OK with the network".
+</p><p>
+The meaning of this frame is not known. I have observed this frame also whe=
+n
+the phone is powered off:
+</p><p>
+=091e 0c 00 09 00 06 01 08 00 81 01 46 1e cc
+</p><p>
+The only different byte is 0x81 (changed from 0x80) so this frame should me=
+an
+"unregistered from the network".
+--- cut here ---
+</p><p>
+</p><pre>-- 
+Pavel Jan=EDk ml.
+Pavel.Janik@inet.cz
+</pre>
+<hr>

@@ -1,0 +1,313 @@
+<h1>FBUS Frame</h1>
+
+<blockquote>
+All FBUS frames have form descriped below.<p>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field Name</td><td>Length</td><td>Description</td></tr>
+<tr><td>TYPE</td><td>1</td><td><a href="#DIR">Type of FBUS Frame</a></td></tr>
+<tr><td>LEN</td><td>1</td><td><a href="#CMD_LEN">Length of Command Frame</a></td></tr>
+<tr><td>CMD</td><td>2+</td><td><a href="#CMD">Command Frame</a></td></tr>
+<tr><td>CRC</td><td>1</td><td><a href="#CRC">Checksum</a></td></tr>
+</tbody></table>
+</p></blockquote>
+
+<h1><a name="DIR"></a>Type</h1>
+
+<blockquote>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Value</td><td>Type of FBUS frame</td></tr>
+<tr><td>0x01</td><td>Command frame from computer to Nokia</td></tr>
+<tr><td>0x02</td><td>??? - Data call frame from computer to Nokia - ???</td></tr>
+<tr><td>0x03</td><td>Data call frame from Nokia to computer</td></tr>
+<tr><td>0x04</td><td>Command frame from Nokia to computer</td></tr>
+</tbody></table>
+</blockquote>
+
+<h1><a name="CMD_LEN"></a>Command length</h1>
+
+<blockquote>
+Indicates number of octets in Command frame.
+</blockquote>
+
+<h1><a name="CMD"></a>Command</h1>
+
+<blockquote>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field Name</td><td>Octets</td><td>Note&nbsp;</td></tr>
+<tr><td>CID</td><td>1</td><td><a href="#List of Command">Command Identifier</a></td></tr>
+<tr><td>SEQ</td><td>1</td><td><a href="#Sequence Number">Sequence number</a></td></tr>
+<tr><td>DATA</td><td>0+</td><td>Command data</td></tr>
+</tbody></table>
+</blockquote>
+
+
+<h1><a name="List of Command"></a>List of FBUS commands</h1>
+
+<blockquote>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>CID</td><td>DIR</td><td>Data</td><td>Resp</td>
+<td>Description</td></tr>
+
+<tr><td>0x0a</td><td>1</td><td>5+<a href="#PNUM">PNUM</a></td><td>0x11</td>
+<td><a href="#Outgoing%20Call%20(0x0a)">Dial a Call</a></td></tr>
+
+<tr><td>0x0b</td><td>4</td><td>3+<a href="#PNUM">PNUM</a></td><td></td>
+<td><a href="#Incoming%20Call">Incoming Call</a></td></tr>
+
+<tr><td>0x0c</td><td>1</td><td>0</td><td></td>
+<td><a href="#Answer%20(0x0c)">Answer to incoming call</a></td></tr>
+
+<tr><td>0x0d</td><td>4</td><td>0</td><td></td>
+<td><a href="#Incoming%20Call%20Answered">Incoming Call Answered (by hand)</a></td></tr>
+
+<tr><td>0x0e</td><td>4</td><td>3</td><td></td>
+<td><a href="#Connection%20Established">Connection Established</a></td></tr>
+
+<tr><td>0x0f</td><td>1</td><td>0</td><td></td>
+<td><a href="#Hang%20up%20(0x0f)">Hang up</a></td></tr>
+
+<tr><td>0x10</td><td>4</td><td>0</td><td></td>
+<td><a href="#Call%20Closed%20(by%20this%20end)%200x10">Hanged up - by self</a></td></tr>
+
+<tr><td>0x11</td><td>4</td><td>2</td><td></td>
+<td><a href="#Call%20Closed%20(by%20other%20end)">Hanged up - by network</a></td></tr>
+
+<tr><td>0x12</td><td>4</td><td>0</td><td></td>
+<td><a href="#Call%20Closed%20(by%20this%20end)%200x12">Hanged up - by self</a></td></tr>
+
+<tr><td>0x13</td><td>4</td><td>0</td><td></td>
+<td><a href="fbus_misc.html#Power%20ON">Power ON</a></td></tr>
+
+<tr><td>0x14</td><td>1</td><td>??</td><td></td>
+<td>???</td></tr>
+
+<tr><td>0x15</td><td>1</td><td>20</td><td>0x16</td>
+<td><a href="fbus_misc.html#Initialization">Initialization</a></td></tr>
+
+<tr><td>0x16</td><td>4</td><td>1</td><td></td>
+<td><a href="fbus_misc.html#Initialization%20OK">Initialization: OK</a></td></tr>
+
+<tr><td>0x17</td><td>4</td><td>1</td><td></td>
+<td><a href="fbus_misc.html#Initialization%20Failed">Initialization: Fail</a></td></tr>
+
+<tr><td>0x18</td><td>1</td><td></td><td>0x1e</td>
+<td></td></tr>
+
+<tr><td>0x19</td><td>1</td><td></td><td>0x1f</td>
+<td></td></tr>
+
+<tr><td>1a,1b,1c,1d</td><td></td><td></td><td></td>
+<td></td></tr>
+
+<tr><td>0x1e</td><td>4</td><td>1</td><td></td>
+<td>Response to 0x18</td></tr>
+
+<tr><td>0x1f</td><td>4</td><td>1</td><td></td>
+<td>Responce to 0x19</td></tr>
+
+<tr><td>0x20</td><td>1</td><td>1+</td><td>0x21,0x22</td>
+<td><a href="#Send%20DTMF">Send DTFM</a></td></tr>
+
+<tr><td>0x21</td><td>4</td><td>0</td><td></td>
+<td><a href="#DTMF%20Sent%20[0x21]">Send DTFM: OK</a></td></tr>
+
+<tr><td>0x22</td><td>4</td><td>1</td><td></td>
+<td><a href="#DTMF%20not%20sent%20[0x22]">Send DTFM: Error</a></td></tr>
+
+<tr><td>0x23</td><td>1</td><td>Lot</td><td></td>
+<td><a href="fbus_sms.html#Sending%20SMS%20Header">Send SM - Header</a></td></tr>
+
+<tr><td>0x24</td><td>1</td><td>Lot</td><td></td>
+<td>Store SM - Header</td></tr>
+
+<tr><td>0x25</td><td>1</td><td>2</td><td>0x2c+0x27,0x2d</td>
+<td><a href="fbus_sms.html#Request%20SMS">Read SM</a></td></tr>
+
+<tr><td>0x26</td><td>1</td><td>2</td><td>0x2e,0x2f</td>
+<td><a href="fbus_sms.html#Deleting%20SMS">Delete SM</a></td></tr>
+
+<tr><td>0x27</td><td>1&amp;4</td><td>1+data</td><td></td>
+<td><a href="fbus_sms.html#SM%20Data">Send/Store/Read SM - UD</a></td></tr>
+
+<tr><td>0x28</td><td>4</td><td>1</td><td></td>
+<td><a href="fbus_sms.html#Message%20Sent">Send SM: Sent</a></td></tr>
+
+<tr><td>0x29</td><td>4</td><td>2</td><td></td>
+<td><a href="fbus_sms.html#Try%20Later">Send SM: Error</a></td></tr>
+
+<tr><td>0x2a</td><td>4</td><td>1</td><td></td>
+<td>Store SM: OK</td></tr>
+
+<tr><td>0x2b</td><td>4</td><td>1</td><td></td>
+<td>Store SM: Error</td></tr>
+
+<tr><td>0x2c</td><td>4</td><td>Lot</td><td></td>
+<td><a href="fbus_sms.html#SM%20Header">Read SM - Header</a></td></tr>
+
+<tr><td>0x2d</td><td>4</td><td>1</td><td></td>
+<td><a href="fbus_sms.html#SM%20Request%20Failed">Read SM: Error</a></td></tr>
+
+<tr><td>0x2e</td><td>4</td><td>0</td><td></td>
+<td><a href="fbus_sms.html#SM%20Deleted">Delete SM: Deleted</a></td></tr>
+
+<tr><td>0x2f</td><td>4</td><td>1</td><td></td>
+<td><a href="fbus_sms.html#SM%20Delete%20Failed">Delete SM: Error</a></td></tr>
+
+<tr><td>0x30</td><td>4</td><td>Lot</td><td></td>
+<td><a href="fbus_sms.html#Message%20Received">SM Received</a></td></tr>
+
+<tr><td>0x31</td><td></td><td></td><td></td>
+<td></td></tr>
+
+<tr><td>0x32</td><td>4</td><td>Lot</td><td></td>
+<td><a href="fbus_sms.html#Delivery%20Report">SM Delivered</a></td></tr>
+
+<tr><td>0x33</td><td>1</td><td>?</td><td>0x34,0x35</td>
+<td></td></tr>
+
+<tr><td>0x34</td><td>4</td><td>1</td><td></td>
+<td>Response to 0x33: OK?</td></tr>
+
+<tr><td>0x35</td><td>4</td><td>?</td><td></td>
+<td>Response to 0x33: Fail?</td></tr>
+
+<tr><td>0x36</td><td></td><td></td><td></td>
+<td></td></tr>
+
+<tr><td>0x37</td><td></td><td></td><td></td>
+<td></td></tr>
+
+<tr><td>0x38</td><td>1</td><td>?</td><td>0x39,0x3a</td>
+<td></td></tr>
+
+<tr><td>0x39</td><td>4</td><td>0</td><td></td>
+<td>Response to 0x38: OK?</td></tr>
+
+<tr><td>0x3a</td><td>4</td><td>1</td><td></td>
+<td>Response to 0x38: Fail?</td></tr>
+
+<tr><td>0x3b</td><td></td><td></td><td></td>
+<td></td></tr>
+
+<tr><td>0x3c</td><td>1</td><td>Lot</td><td>0x3d,0x3e?</td>
+<td><a href="fbus_sms.html#Write%20SMS%20Settings%20to%20phone">Change SMS Settings</a></td></tr>
+
+<tr><td>0x3d</td><td>4</td><td>0</td><td></td>
+<td><a href="fbus_sms.html#Write%20SMS%20Settings%20to%20phone">Response to 0x3c: OK</a></td></tr>
+
+<tr><td>0x3e</td><td>4</td><td>1</td><td></td>
+<td><a href="fbus_sms.html#Write%20SMS%20Settings%20to%20phone">Response to 0x3c: Fail ???</a></td></tr>
+
+<tr><td>0x3f</td><td>1</td><td>0</td><td>0x41</td>
+<td><a href="fbus_sms.html#Read%20SMS%20Settings%20from%20phone">Read SMS Settings and info</a></td></tr>
+
+<tr><td>0x40</td><td>4</td><td>0</td><td></td>
+<td><a href="fbus_sms.html#SMS%20Settings%20not%20available%20[0x40]">SMS Settings not found</a></td></tr>
+
+<tr><td>0x41</td><td>4</td><td>Lot</td><td></td>
+<td><a href="fbus_sms.html#SMS%20Settings%20from%20phone">SMS Settings and info</a></td></tr>
+
+<tr><td>0x42</td><td>1</td><td>Lot</td><td>0x44,0x45</td>
+<td><a href="fbus_pbk.html#Write%20Phonebook%20Entry">Write Phonebook Entry</a></td></tr>
+
+<tr><td>0x43</td><td>1</td><td>2</td><td>0x46,0x47</td>
+<td><a href="fbus_pbk.html#Read%20Phonebook%20Entry">Read Phonebook Entry</a></td></tr>
+
+<tr><td>0x44</td><td>4</td><td>0</td><td></td>
+<td><a href="fbus_pbk.html#Phonebook%20Entry%20Write%20Succeeded">Response to 0x42: OK</a></td></tr>
+
+<tr><td>0x45</td><td>4</td><td>1</td><td></td>
+<td><a href="fbus_pbk.html#Phonebook%20Entry%20Write%20Failed">Response to 0x42: Fail</a></td></tr>
+
+<tr><td>0x46</td><td>4</td><td>Lot</td><td></td>
+<td><a href="fbus_pbk.html#Phonebook%20Entry">Response to 0x43: Phonebook Entry</a></td></tr>
+
+<tr><td>0x47</td><td>4</td><td>1</td><td></td>
+<td><a href="fbus_pbk.html#Phonebook%20Entry%20Invalid">Response to 0x43: Fail</a></td></tr>
+
+<tr><td>0x48</td><td>4</td><td>0</td><td></td>
+<td><a href="fbus_misc.html#PIN%20Entered">PIN Code Successfully Entered</a></td></tr>
+
+<tr><td>0x49</td><td>4</td><td>0</td><td></td>
+<td><a href="fbus_misc.html#Power%20OFF">Power OFF</a></td></tr>
+
+<tr><td>0x4a</td><td>1</td><td>0</td><td>0x4b</td>
+<td><a href="fbus_misc.html#Status%20Request">Request Status info</a></td></tr>
+
+<tr><td>0x4b</td><td>4</td><td>3</td><td></td>
+<td><a href="fbus_misc.html#Status%20Info">Status info</a></td></tr>
+
+<tr><td>0x4c</td><td>1</td><td>0</td><td>0x4d</td>
+<td><a href="fbus_misc.html#Phone%20Info%20Request">Request phone info</a></td></tr>
+
+<tr><td>0x4d</td><td>4</td><td>Lot</td><td></td>
+<td><a href="fbus_misc.html#Phone%20Info">Phone info</a></td></tr>
+</tbody></table>
+</blockquote>
+<p>
+</p><hr width="100%">
+<h1>
+<a name="CRC"></a>Checksum</h1>
+
+<blockquote>Checksum of FBUS Frame is calculated with algorithm:
+<blockquote>
+<pre>CRC = 0;</pre>
+
+<pre>for (i = 0; i &lt; (2 + CMD_LEN); i++)</pre>
+
+<pre>&nbsp;&nbsp;&nbsp; CRC ^= frame[i];</pre>
+</blockquote>
+All octets in FBUS frame except CRC itself is counted.</blockquote>
+
+<h1>
+<a name="Sequence Number"></a>Sequence Number of Command Frame</h1>
+
+<blockquote>Sequence number of command in case where direction is from
+ME to computer, the&nbsp;&nbsp;&nbsp; sequence number is counting from
+0x30 to 0x37 and resetting back to 0x30. When direction is from computer
+to ME, sequence number counts from 0x08 to 0x0f and resets back to 0x08.
+<br>It may not be required to be this way. Sequence numbers are used in
+acknowledging commands.</blockquote>
+
+<hr width="100%">
+<h1>
+<a name="PNUM"></a>Address</h1>
+
+<center><table width="80%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>LEN</td><td>1</td><td>Length of NUMBER field.</td></tr>
+<tr><td>NUMBER</td><td>*</td><td>ASCII coded phone number.</td></tr>
+</tbody></table></center>
+
+<h1>
+<a name="PNAME"></a>Label</h1>
+
+<center><table width="80%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>LEN</td><td>1</td><td>Length of NAME field.</td></tr>
+<tr><td>NAME</td><td>*</td><td>ASCII coded name.</td></tr>
+</tbody></table></center>
+
+<p>
+</p><hr width="100%">
+<h1>
+<a name="MEM"></a>Memory area</h1>
+
+<center><table width="80%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Value</td><td>Memory Area</td></tr>
+<tr><td>0x01</td><td>Phone Selected</td></tr>
+<tr><td>0x02</td><td>SIM</td></tr>
+<tr><td>0x03</td><td>ME</td></tr>
+<tr><td>0x04</td><td>Own numbers (at SIM)</td></tr>
+</tbody></table></center>
+
+<h1>
+<a name="LOC"></a>Memory location</h1>
+
+<center><table width="80%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Phone</td><td>Memory Area</td><td>Min</td><td>Max</td></tr>
+<tr><td rowspan="2" valign="TOP" align="LEFT">3110</td><td>SIM</td><td>1</td><td>250</td></tr>
+<tr><td>ME</td><td>0</td><td>0</td></tr>
+<tr><td rowspan="2" valign="TOP" align="LEFT">8110</td><td>SIM</td><td>1</td><td>199</td></tr>
+<tr><td>ME</td><td>1</td><td>50</td></tr>
+</tbody></table></center>

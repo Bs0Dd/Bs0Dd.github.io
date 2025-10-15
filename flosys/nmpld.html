@@ -1,0 +1,86 @@
+<h1>Nokia modem protocol/Linux driver</h1>
+<hr>
+<ul>
+<li><em>To</em>: <a href="mailto:nokia@multivac.fatburen.org">nokia@multivac.fatburen.org</a>, <a href="mailto:linux-nokia@net.lut.ac.uk">linux-nokia@net.lut.ac.uk</a></li>
+<li><em>Subject</em>: Nokia modem protocol/Linux driver</li>
+<li><em>From</em>: Colin Paton &lt;<a href="mailto:colinp@tardis.ed.ac.uk">colinp@tardis.ed.ac.uk</a>&gt;</li>
+<li><em>Date</em>: Wed, 17 Feb 1999 10:55:41 GMT</li>
+<li><em>Cc</em>: <a href="mailto:adq@tardis.ed.ac.uk">adq@tardis.ed.ac.uk</a></li>
+<li><em>Sender</em>: <a href="mailto:owner-nokia@multivac.fatburen.org">owner-nokia@multivac.fatburen.org</a></li>
+</ul>
+<hr>
+<pre>Hello,
+
+I'm posting this message to both the Nokia 6110 and 3110 mailing lists. I
+think that there might conceivably be overlap between the two phones in
+this area, hence my reason for posting to both mailing lists.
+
+I believe that I've made fairly significant
+progress in determining how the GSM data adaptor/"modem" works... And 
+rather nicely, it's all documented in the official GSM specs! Very kind of
+Nokia.
+
+The phone and PC spit out raw GSM frames encapsulated within the 'Nokia'
+frame format. This frame format is slightly modified in that it doesn't
+include the frame sequence number bytes, as are present in the 'normal' 
+frames. This means that all that needs to be done is write code to 
+create the GSM frames, stick a few fixed bytes in front, calculate the
+16 bit XOR Nokia checksum and stick it on the back of the frame.
+
+There's even better news! The GSM frame format is pretty closely based on
+an HDLC type control mechanism. Lo and behold the Linux kernel includes a
+LAPB driver- LAPB is pretty much what the GSM format uses. Therefore all
+the code to do retries, timers, etc is already written (even the timers
+use the same names) and I think all that needs to be done is to modify
+the code to write GSM RLP frames, rather than LAPB format frames. This 
+shouldn't be too difficult a task.
+
+The Nokia 6150 phone also seems to spit out SMS entries as GSM PDUs
+encapsulated within a "Nokia" frame. This too, is quite nice as it means
+that all the error messages are in the standards.
+
+For information, the relevant standards are available from:
+
+www.etsi.fr in PDF format. Typing 'search' on the front page should find them.
+
+You need:
+
+GSM 04.22 - Defines the RLP protocol used by the Nokia 6110 data mode.
+GSM 07.02 - Defines the "flow control" layer stuck on top of GSM RLP.
+GSM 03.40 - Defines the PDUs used when sending/receiving/notifying SMS msgs.
+GSM 03.41 - Defines the PDUs used when cell broadcasts are received.
+
+----------------
+
+I've noticed a few errors in the dumps that I sent to the Nokia 6110
+mailing list a while back; for some reason bit 7 is set to '1' occasionally
+in some of the dumps. I've condensed this stuff into a more readable
+form which I will put on a web page when it's ready.
+
+I've got a VERY rough linux program to read and write frames to the phone and
+read the odd phonebook entry, etc... I've also managed to get code running
+on a Palmpilot which prints a list of CellIDs, and also displays the
+signal strength, etc.
+
+I'm wondering exactly how to write code so that it could be concise enough
+to run on the Palmpilot (Palm OS restricts you to really small code sizes,etc)
+but also generic enough to run different phones and different operating
+systems.
+
+Somebody had suggested writing a Nokia Linux device driver; this would be
+controlled using ioctl controls - e.g. one for 'read SMS' 'write SMS' etc.
+These ioctls would block until the phone responded or a timeout occurred. A
+queue would be implemented for all the unsolicited phone messages - an ioctl
+would exist to read this queue - the controlling software would periodically
+poll this queue.
+
+However, I know that events are underway with a Nokia 3110 linux driver, and
+as people have mentioned it would make sense to duplicate as much of the
+work as possible.
+
+Anyway.. I noticed that the 6110 list was rather quiet, so there are a couple
+more pieces of information to stimulate discussion.
+
+Colin
+</pre>
+<hr>

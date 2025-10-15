@@ -1,0 +1,537 @@
+<style> 
+.gridh2
+   { background-color: #dddddd}
+
+.grid
+   { background-color: #eeeeee}
+</style>
+
+<font face="Arial,Helvetica"><font color="#000099">Here
+are some more message types for the GSM-900 / GSM-1800 phones 5110 / 6110
+/ 6150</font></font>
+<br><font face="Arial,Helvetica"><font color="#000099">They are originally
+FBUS commands most of them could be used as MBUS Commands also.</font></font>
+<br><font face="Arial,Helvetica"><font color="#000099">Maybe with little
+variations, just use them as a guideline.</font></font>
+<br><font face="Arial,Helvetica"><font color="#000099">They should work
+with a 6190 also.</font></font>
+<br><font face="Arial,Helvetica"><font color="#000099"></font></font>&nbsp;<tt></tt>
+<h3 style="background-color:lightgreen;padding-left:10px;">MBUS Header:</h3>
+<tt>0x1F 0x00 0x1D <b><font color="#3333FF">"CMD"</font></b> 0x00 LEN
+<i><font color="#3333FF">"data as on table"</font></i> SEQ CRC</tt>
+<br><br>
+
+<h2 align="center">CMD</h2>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x01: Call Information</h3>
+
+<table>
+  <tr>
+    <td class="gridh2">s</td>
+    <td class="grid">make data call</td>
+    <td class="grid">0x00, 0x01, 0x00, 0x01, numlen, "number", 0x01, 0x02, 0x01, 0x05, 0x81, 0x01, 0x00, 0x00, 0x01, 0x02, 0x0a, 0x07, 0xa2, 0xc8, 0x81, 0x21, 0x15, 0x63, 0xa8, 0x00, 0x00</td>
+  </tr>
+  <tr>
+    <td class="gridh2">s</td>
+    <td class="grid">make voice call</td>
+    <td class="grid">0x00, 0x01, 0x00, 0x01, numlen, "number", 0x05, 0x01, 0x01, 0x05, 0x81, 0x01, 0x00, 0x00, 0x01</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">call seq num for this call</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x02, callseqnr</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">established data call</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x03, callseqnr, 0x01, 0x00, 0x01, 0x03, 0x09, 0x91, 0x07, 0xa2, 0x88, 0x81, 0x21, 0x15, 0x63, 0xa6</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">established voice call</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x03, callseqnr, 0x05, 0x00, 0x01, 0x03, 0x02, 0x91, 0x00</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">destignation not available</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x01, 0x00 unallocated number (Q.931 ISDN cause elements)</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">missed call (inc call end)</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x10, 0x00 normal call clearing</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">line is busy</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x11, 0x00 user busy</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">not available</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x12, 0x00 no user responding</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">no answer from user</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x13, 0x00 no answer from user</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">call rejected</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x15, 0x00 call rejected</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">called number invalid</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x1c, 0x00 invalid number format</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">network busy</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x29, 0x00 temporary failure</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">end of datacall, rlp termin</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x7f, 0x00 interworking unspecified</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">error in data call?</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0xa0, 0x00</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">incoming call alert</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x05, callseqnr, calltype (0x05=voice), numlen, "number", namelen, "name", 0x00</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">answered call</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x07, callseqnr</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">terminated call</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x09, callseqnr, 0x00</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">hangup by phone</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x0a, callseqnr, 0x87</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">wrong terminal init?</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x40</td>
+  </tr>
+  <tr>
+    <td class="gridh2">s</td>
+    <td class="grid">initiate terminal</td>
+    <td class="grid">0x00, 0x01, 0x00, 0x42, 0x05, 0x01, 0x07, 0xa2, 0xc8, 0x81, 0x21, 0x15, 0x63, 0xa8, 0x00, 0x00, 0x07, 0xa3, 0xb8, 0x81, 0x20, 0x15, 0x63, 0x80, 0x01, 0x60</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">response of init terminal</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x43, 0x02</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">error resp.-illegal format</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x44, 0x7d</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">error resp.-unknown</td>
+    <td class="grid">0x01, 0x08, 0x00, 0x44, 0x83</td>
+  </tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x02: SMS handling</h3>
+
+<table>
+  <tr>
+    <td class="gridh2">s</td>
+    <td class="grid">Send SMS message</td>
+    <td class="grid">{ 0x00 01, 0x02, 0x00 (SEND REQUEST), ... }</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">Message sent</td>
+    <td class="grid">{ 0x00 02 }</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">Send failed</td>
+    <td class="grid">{ 0x00 03 }</td>
+  </tr>
+</table>
+<br>
+<table>
+  <tr>
+    <td class="gridh2">s</td>
+    <td class="grid">Get SMS message</td>
+    <td class="grid">{ 0x00 07, 0x02, location, 0x01, 0x64 }</td>
+  </tr>
+  <tr>
+    <td class="gridh2">s</td>
+    <td class="grid">Initiate connection</td>
+    <td class="grid">{ 0x00 0d, 0x00, 0x00, 0x02 }</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">SMS message received</td>
+    <td class="grid">{ 0x00 10, ...... } (whole message)</td>
+  </tr>
+</table>
+<br>
+<table>
+  <tr>
+    <td class="gridh2">s</td>
+    <td class="grid">Get SMS center</td>
+    <td class="grid">{ 0x00 33, 0x64, priority }</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">SMS center received</td>
+    <td class="grid">{ 0x00 34, priority, ... } 21-&gt; smscenter number (BCD), 33-&gt; smscenter name</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">SMS center error recv</td>
+    <td class="grid">{ 0x00 35 }</td>
+  </tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x03: Phonebook functions</h3>
+
+<table>
+  <tr>
+    <td class="gridh2">s</td>
+    <td class="grid">Get mem location</td>
+    <td class="grid">{ 0x00 01, memtype, location, 0 }</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">mem location recvd</td>
+    <td class="grid">{ 0x00 02, memtype, namelen, "name", numlen, "number", groupID}</td>
+  </tr>
+  <tr>
+    <td class="gridh2">r</td>
+    <td class="grid">mem loc error recvd</td>
+    <td class="grid">{ 0x00 03, errtype }</td>
+  </tr>
+  <tr>
+    <td class="grid" colspan="2"></td>
+    <td class="grid">errtype: 0x7d: invalid memory type</td>
+  </tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Set mem location</td><td class="grid">{ 0x00 04, memtype,location,namelen,"Name",numlen,"number",groupID}</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">mem set OK</td><td class="grid">{ 0x00 05 }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">mem set error</td><td class="grid">{ 0x00 06, errtype }</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">errtype: 0x7d: name is too long</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Mem status request</td><td class="grid">{ 0x00 07, memtype }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Mem status recvd</td><td class="grid">{ 0x00 08, memtype, free, used }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Mem status error recv</td><td class="grid">{ 0x00 09, errtype }</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">errtype: 0x6f: mem status error</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">0x7d: invalid memory type</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">0x8d: waiting for pin</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Get caller group name</td><td class="grid">{ 0x00 10, groupID }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Get caller group name</td><td class="grid">{ 0x00 11, groupID, size, "Name", ringtone,
+graphics?1:0, ?,?,?, {72x14 logo}, ?,? }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Get call.group error</td><td class="grid">{ 0x00 12 }</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Get speed dial</td><td class="grid">{ 0x00 16, index(1-9) }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Get speed dial OK</td><td class="grid">{ 0x00 17, mem.type, location }</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">where</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">mem.type: 0x02: ME (== 0 if not stored)</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">0x03: SIM</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">location: memory location (== 0 if not stored)</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Get speed dial error</td><td class="grid">{ 0x0018 }</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Set speed dial</td><td class="grid">{ 0x0019, index(1-9), mem.type, location }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Set speed dial OK</td><td class="grid">{ 0x001a }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Set speed dial error</td><td class="grid">{ 0x001b }</td></tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x04: Phone Status</h3>
+
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Phone status</td><td class="grid">{ 0x0001 }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Phone status</td><td class="grid">{ 0x0002, mode, signal str, ???, pwr, batt.level
+}</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid"><b><u>mode</u></b>:
+<ol>
+<li>registered within the network</li>
+<li>call in progress</li>
+<li>waiting for pin</li>
+<li>powered off</li>
+</ol>
+</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid"><b><u>pwr</u></b>:
+<ol>
+<li>AC/DC</li>
+<li>battery</li>
+</ol>
+</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Request Phone ID</td><td class="grid">{ 0x0003 }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Request Phone ID</td><td class="grid">{ 0x0004, 0x01, "imei", 0, "model", 0,
+"prod.code", 0, "HW", 0, "firmware", 0x00, 0x01 }</td></tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x05: Welcome Messages /
+pictures</h3>
+
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Get welcome message</td><td class="grid">{ 0x0016, 0x01 }</td></tr>
+<td class="gridh2">s</td><td class="grid">Set welcome message</td><td class="grid">{ 0x0018, 0x01, 0x02, text }</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Unset welcome message</td><td class="grid">{ 0x0018, 0x01, 0x03 }</td></tr>
+<td class="gridh2">s</td><td class="grid">Request of picture</td><td class="grid">{ 0x0033, 0x01 }</td></tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x07: Key assignments</h3>
+
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Get key assignments</td><td class="grid">{ 0x0040, 0x01 }</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">(answer in '0x0c')</td></tr>
+</table>
+<br>
+
+<table>
+<h3 style="background-color:lightgreen;padding-left:10px;">0x08: PIN request</h3>
+
+<table>
+<tr><td class="gridh2">s</td><td class="grid">??? (maybe status)</td><td class="grid">{ 0x0007, 0x01, 0x01 }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">pin recvd</td><td class="grid">{ 0x0008, accepted }</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">accepted: 0x0c: OK</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">entering pin</td><td class="grid">{ 0x000a, 0x02, "PIN", 0x00 }</td></tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x0a: Network status</h3>
+
+<table>
+<tr><td class="gridh2">r</td><td class="grid">network registration</td><td class="grid">{ 0x0071, ?,?,?,length,netstatus,netsel,cellIDH,cellIDL,lacH,lacL,netcode,netcode,netcode
+}</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Key duplication on/off</td><td class="grid">{ 0x0044, on? 0x01: 0x02 }</td></tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x0c: Key assignments</h3>
+
+<table>
+<tr><td class="gridh2">r</td><td class="grid">Get key assignments</td><td class="grid">{ 0x00, 0x01, 0x08, 0x00, {key '1'}, 0x00,{key
+'2'} ... {key '0'}, 0, 0, 0, {symbols}, 0 }</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">where {key '0'} =&gt; ' ', '0'</td></tr>
+</table>
+<br>
+
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x0d: Status</h3>
+
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Status request</td><td class="grid">{ 0x0051 }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Status</td><td class="grid">{ 0x0052, no. of byte pairs, {byte pair} }</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">where {byte pair}: {cmd, 1:off 2:on}</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">cmd:
+<ol>
+<li>call in progress</li>
+<li>???</li>
+<li>have unread sms</li>
+<li>voice call active</li>
+<li>fax call active</li>
+<li>data call active</li>
+<li>key lock active</li>
+<li>is SMS storage full</li>
+</ol>
+</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Display status</td><td class="grid">{ 0x0053, 1:on 2:off }</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">(will send displayed messages with x,y coordinates)</td></tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x11: Phone clock &amp; alarm</h3>
+
+<table>
+<tr><td class="gridh2">s</td><td class="grid">set date and time</td><td class="grid">{ 0x0060, 1,1,7,yearh,yearl,month,mday,hour,min, 0x00
+}</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">date and time set</td><td class="grid">{ 0x0061 }</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">get date and time</td><td class="grid">{ 0x0062 }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">date and time recvd</td><td class="grid">{ 0x0063,?,?,?,?,yearh,yearl,month,mday,hour,min,second
+}</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">set alarm</td><td class="grid">{ 0x006b, 1,32,3, 0x02(on-off),hour,min, 0x00 }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">alarm set</td><td class="grid">{ 0x006c }</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">get alarm</td><td class="grid">{ 0x006d }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">alarm received</td><td class="grid">{ 0x006e,?,?,?,?,alrm(==2:on),hour,min }</td></tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x12: Connect to NBS port</h3>
+
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Send</td><td class="grid">{+0x0c, 0x01, 0x06, 0x05, 0x04,destporth,destportl,srcporth,srcportl,...</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">(without 0,1, 0 header -- for oplogo, cli, ringtone etc upload)</td></tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x13: Calendar notes</h3>
+
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Write calendar note</td><td class="grid">{ 0x0064, 0x01, 0x10, length, type, yearH,
+yearL, month, day, hour, timezone, alarm?(alarm yearH, yearL, month, day,
+hour, timezone): (0, 0, 0, 0, 0, 0), textlen, "text" }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Write cal.note report</td><td class="grid">{ 0x0065, return }</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">where return:
+<ul>
+<li>0x01: ok</li>
+<li>0x73: failure</li>
+</ul>
+</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Calendar notes set</td><td class="grid">{ 0x0066... }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Calendar note recvd</td><td class="grid">{ 0x0067, 0x01, ?, length, type, yrH,yrL,mon,day,hr,tz,alrm
+yrH,yrL,mon,day,hr,tz, textlen, "text" }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Cal.note recvd error</td><td class="grid">{ 0x0067, err }</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">where err:
+<ul>
+<li>0x93: not available</li>
+<li>(0x01: OK)</li>
+<li>other: error</li>
+</ul>
+</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Delete cal.note</td><td class="grid">{ 0x0068, location }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Del. cal.note report</td><td class="grid">{ 0x0069, err }</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">where err:
+<ul>
+<li>0x01: OK</li>
+<li>0x93: cannot delete</li>
+</ul>
+</td></tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x14: SMS funcs</h3>
+
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Write SMS to outbox</td><td class="grid">{ 0x0004, <b>(text cut?)</b></td></tr>
+<tr><td class="gridh2">r</td><td class="grid">SMS message frame rcv</td><td class="grid">{ 0x0008,subtype,?,num,?,BCD(smscenter)...}
+20-&gt;type, 22-&gt;status</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">type:
+<ul>
+<li>0x06: delivery report<br>
+status:
+<ul>
+<li>0x00: delivered</li>
+<li>0x30: pending</li>
+<li>0x46: failed</li>
+</ul>
+<br>
+</li>
+<li>0x09: reading failed<br>
+subtype:
+<ul>
+<li>0x02: invalid mem type</li>
+<li>0x07: empty SMS location</li>
+</li>
+</ul>
+</ul>
+</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Delete SMS message</td><td class="grid">{ 0x000a, 0x02, location }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Delete OK</td><td class="grid">{ 0x000b }</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">SMS status request</td><td class="grid">{ 0x0036, 0x64 }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">SMS status</td><td class="grid">{ 0x0037,?,?,?,?,?,?,msgnumber,unread }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">SMS status error</td><td class="grid">{ 0x0038 }</td></tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x40: Security commands</h3>
+
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Enable code sending</td><td class="grid">{ 0x0164, 0x01 }</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Get security code</td><td class="grid">{ 0x016e, 0x01 }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Get security code</td><td class="grid">{ 0x016e,?,?, sec code (text) }</td></tr>
+</table>
+<br>
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Netmonitor</td><td class="grid">{ 0x7eXX }</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">where: XX:</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">F0: reset</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">F1: off</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">F2: field test menus</td></tr>
+<tr><td class="grid" colspan="2"></td><td class="grid">F3: developer menus</td></tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x64: Phone identification</h3>
+
+<table>
+<tr><td class="gridh2">s</td><td class="grid">Phone ID request</td><td class="grid">{ 0x0010 }</td></tr>
+<tr><td class="gridh2">r</td><td class="grid">Phone ID recvd</td><td class="grid">{ "NOKIA", "imei", 0, "model", 0, "prod.code",
+0, "HW", 0, "firmware", magic bytes x 4 ... }</td></tr>
+</table>
+<br>
+
+<h3 style="background-color:lightgreen;padding-left:10px;">0x7f: Acknowledge {+type,
+seq }</h3>
+<br>
+<h3 style="background-color:lightgreen;padding-left:10px;">0xd0: Power on message seq
+1 (receive only)</h3>
+<br>
+<h3 style="background-color:lightgreen;padding-left:10px;">0xf4: Power on message seq
+2 (receive only)</h3></p>

@@ -1,0 +1,260 @@
+<h3><center><font face="Arial" color="#990000">Nokia 21xx Communications
+Protocol</font></center></h3>
+
+<h4><font face="Arial" color="#990000"></font>&nbsp;</h4>
+
+<h4><font face="Arial" color="#990000">Serial Parameters</font></h4>
+
+<p><table width="156" cellspacing="2" cellpadding="0" border="1">
+  <tbody><tr>
+    <td width="52%">
+    &nbsp;Speed</td> 
+    <td width="48%">
+    <p></p><center>&nbsp;9600 bps</center></td>
+  </tr>
+  <tr>
+    <td width="52%">
+    &nbsp;Bits</td> 
+    <td width="48%">
+    <p></p><center>&nbsp;8</center></td>
+  </tr>
+  <tr>
+    <td width="52%">
+    &nbsp;Parity</td> 
+    <td width="48%">
+    <p></p><center>Odd</center></td>
+  </tr>
+  <tr>
+    <td width="52%">
+    &nbsp;Stop Bits</td> 
+    <td width="48%">
+    <p></p><center>&nbsp;1</center></td>
+  </tr>
+</tbody></table></p>
+
+<p><font face="Times New Roman" color="#000000">RTS and DTR must
+be logic 0 (voltage &gt;= +10v) to provide power for the interface
+lead.</font></p>
+
+<p>&nbsp;</p>
+
+<h4><font face="Arial" color="#990000">Protocol Details</font></h4>
+
+<p><font face="Times New Roman" color="#000000">Since communication
+occurs over a bidirectional 1 bit bus, a half duplex protocol
+is in operation.</font></p>
+
+<p><font face="Times New Roman" color="#000000">Much of the data
+transfer is along the lines:</font></p>
+
+<p><font face="Times New Roman" color="#000000">&lt;computer sends
+request&gt;</font></p>
+
+<p><font face="Times New Roman" color="#000000">&lt;phone sends
+ack&gt;<br>
+&lt;phone sends response&gt;</font></p>
+
+<p><font face="Times New Roman" color="#000000">&lt;computer sends
+ack&gt;</font></p>
+
+<p><font face="Times New Roman" color="#000000">It is, however,
+possible for the phone to automatically send notification of certain
+events (e.g. the reception of a new SMS message) autonomously
+without a corresponding request from the computer. Thus, it is
+not safe<br>
+to assume the contents of a received message from the phone.</font></p>
+
+<p><font face="Times New Roman" color="#000000">Shown below are
+the general formats for request, response and acknowledgement
+packets.</font></p>
+
+<p>&nbsp;</p>
+
+<h4><font face="Arial" color="#990000">Request from Computer</font></h4>
+
+<pre><font face="Courier New" color="#000000">+--+--+--+----------+--+---+</font>
+<font face="Courier New" color="#000000">|00|ri|fl|data frame|id|chk|</font>
+<font face="Courier New" color="#000000">+--+--+--+----------+--+---+</font></pre>
+
+<p><table width="520" cellspacing="2" cellpadding="0" border="1">
+  <tbody><tr>
+    <td width="16%">
+    &nbsp;ri</td> 
+    <td width="84%">
+    &nbsp;<font face="Times New Roman" color="#000000">request identifier,
+    wakeup: 0xf8 normal:0xe4</font></td> 
+  </tr>
+  <tr>
+    <td width="16%">
+    &nbsp;fl</td> 
+    <td width="84%">
+    &nbsp;<font face="Times New Roman" color="#000000">length of
+    data frame - 1 (&lt;= 0x78)</font></td>
+  </tr>
+  <tr>
+    <td width="16%">
+    &nbsp;data frame</td> 
+    <td width="84%">
+    &nbsp;<font face="Times New Roman" color="#000000">main body
+    of the request</font></td> 
+  </tr>
+  <tr>
+    <td width="16%">
+    &nbsp;id</td> 
+    <td width="84%">
+    &nbsp;<font face="Times New Roman" color="#000000">request identity
+    number 1..n, incremented after the request is accepted</font></td> 
+  </tr>
+  <tr>
+    <td width="16%">
+    &nbsp;chk</td> 
+    <td width="84%">
+    &nbsp;<font face="Times New Roman" color="#000000">checksum created
+    by XORing all the preceding bytes in the request</font></td> 
+  </tr>
+</tbody></table><br>
+</p>
+
+<h4><font face="Arial" color="#990000">Ack from Phone</font></h4>
+
+<pre><font face="Courier New" color="#000000">+--+--+--+------------+--+---+</font>
+<font face="Courier New" color="#000000">|ri|00|fl|[data frame]|id|chk|</font>
+<font face="Courier New" color="#000000">+--+--+--+------------+--+---+</font></pre>
+
+<p><table width="512" cellspacing="2" cellpadding="0" border="1">
+  <tbody><tr>
+    <td width="16%">
+    &nbsp;ri</td> 
+    <td width="84%">
+    <font face="Times New Roman" color="#000000">request identifier
+    taken from original request packet</font></td> 
+  </tr>
+  <tr>
+    <td width="16%">
+    &nbsp;fl</td> 
+    <td width="84%">
+    <font face="Times New Roman" color="#000000">0x7f if ri=0xe4
+    or 0x7e if ri=0xf8</font></td> 
+  </tr>
+  <tr>
+    <td width="16%">
+    &nbsp;data frame</td> 
+    <td width="84%">
+    <font face="Times New Roman" color="#000000">data, only present
+    if ri=0xf8</font></td>
+  </tr>
+  <tr>
+    <td width="16%">
+    &nbsp;id</td> 
+    <td width="84%">
+    <font face="Times New Roman" color="#000000">request identity
+    number 1..? corresponding to the original request packet id</font></td>
+  </tr>
+  <tr>
+    <td width="16%">
+    &nbsp;chk</td> 
+    <td width="84%">
+    <font face="Times New Roman" color="#000000">checksum created
+    by XORing all the preceding bytes in the ack</font></td> 
+  </tr>
+</tbody></table></p>
+
+<p>&nbsp;</p>
+
+<h4><font face="Arial" color="#990000">Response from Phone</font></h4>
+
+<pre><font face="Courier New" color="#000000">+--+--+--+----------+--+---+</font>
+<font face="Courier New" color="#000000">|ri|00|fl|data frame|id|chk|</font>
+<font face="Courier New" color="#000000">+--+--+--+----------+--+---+</font>
+
+<table width="529" cellspacing="2" cellpadding="0" border="1">
+<tbody><tr><td width="16%">
+    &nbsp;ri</td><td width="84%">
+    <font face="Times New Roman" color="#000000">response identifier
+    (corresponds to original request if appropriate) 0xe4 or 0xe0</font></td></tr><tr><td width="16%">
+    &nbsp;fl</td><td width="84%">
+    <font face="Times New Roman" color="#000000">bytes in data frame
+    - 1 (&lt;= 0x78)</font></td></tr><tr><td width="16%">
+    &nbsp;data frame</td><td width="84%">
+    <font face="Times New Roman" color="#000000">main body of response</font></td></tr>
+<tr><td width="16%">
+    &nbsp;id</td><td width="84%">
+    &nbsp;<font face="Times New Roman" color="#000000">response identity
+    number 1..?, independently generated by phone</font></td></tr><tr><td width="16%">
+    &nbsp;chk</td><td width="84%">
+    &nbsp;<font face="Times New Roman" color="#000000">checksum created
+    by XORing all the preceding bytes in response</font></td></tr></tbody></table></pre>
+
+<p>&nbsp;</p>
+
+<h4><font face="Arial" color="#990000">Ack from Computer</font></h4>
+
+<pre><font face="Courier New" color="#000000">+--+--+--+--+---+</font>
+<font face="Courier New" color="#000000">|00|ri|fl|id|chk|</font>
+<font face="Courier New" color="#000000">+--+--+--+--+---+</font>
+
+<table width="505" cellspacing="2" cellpadding="0" border="1">
+<tbody><tr><td width="9%">
+    &nbsp;ri</td><td width="91%">
+    &nbsp;<font face="Times New Roman" color="#000000">response identifier
+    taken from response packet</font></td></tr><tr><td width="9%">
+    &nbsp;fl</td><td width="91%">
+    &nbsp;<font face="Times New Roman" color="#000000">0x7f</font></td></tr><tr><td width="9%">
+    &nbsp;id</td><td width="91%">
+    &nbsp;<font face="Times New Roman" color="#000000">response identity
+    number 1..? corresponding to the response packet id</font></td></tr>
+<tr><td width="9%">
+    &nbsp;chk</td><td width="91%">
+    &nbsp;<font face="Times New Roman" color="#000000">checksum created
+    by XORing all the preceding bytes in the ack</font></td></tr></tbody></table></pre>
+
+<p>&nbsp;</p>
+
+<h4><font face="Arial" color="#990000">Request Sequence</font></h4>
+
+<p>Before free communication can occur the computer must send
+a special request for communication:</p>
+
+<p><table width="306" cellspacing="2" cellpadding="0" border="1">
+  <tbody><tr>
+    <td width="25%">
+    &nbsp;ri</td> 
+    <td width="75%">
+    &nbsp;0xf8</td> 
+  </tr>
+  <tr>
+    <td width="25%">
+    &nbsp;data frame</td> 
+    <td width="75%">
+    &nbsp;0xe9 0x00 0x02 0x1c 0x00 0x1c</td> 
+  </tr>
+</tbody></table></p>
+
+<p>The complete packet is:</p>
+
+<pre><font face="Courier New">+--+--+--+--+--+--+--+--+--+--+--+</font>
+<font face="Courier New">|00|f8|05|e9|00|02|1c|00|1c|01|17|</font>
+<font face="Courier New">+--+--+--+--+--+--+--+--+--+--+--+</font></pre>
+
+<p>The phone will acknowledge with:</p>
+
+<p><table width="306" cellspacing="2" cellpadding="0" border="1">
+  <tbody><tr>
+    <td width="25%">
+    &nbsp;ri</td> 
+    <td width="75%">
+    &nbsp;0xf8</td> 
+  </tr>
+  <tr>
+    <td width="25%">
+    &nbsp;data frame</td> 
+    <td width="75%">
+    &nbsp;0x1c 0x01 0x1c</td> 
+  </tr>
+</tbody></table></p>
+
+<p>The complete acknowledgement packet is:</p>
+
+<pre><font face="Courier New">+--+--+--+--+--+--+--+--+</font>
+<font face="Courier New">|f8|00|7e|1c|01|1c|02|85|</font>
+<font face="Courier New">+--+--+--+--+--+--+--+--+</font></pre>

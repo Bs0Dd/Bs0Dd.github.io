@@ -1,0 +1,253 @@
+<p></p><center><font size="+1" face="Arial" color="#990000">Nokia
+6110 Serial Protocol</font></center><p></p>
+
+<p><font color="#000000">Here are some of the details that I've
+observed while monitoring the protocol Nokia Cellular Data Suite
+uses to talk over a serial cable to the 6110. The information
+is fairly sketchy at the moment with lots of gaps, especially
+in the basic frame format. It is, however, a start.</font></p>
+
+<p><font color="#000000">Snooping was performed over a wired connection.
+It is assumed that if infra red is used that much the same data
+is sent, but it may be wrapped up in a low level IrDA format.</font></p>
+
+<p><font size="+1" face="Arial" color="#990000">Serial Communication</font></p>
+
+<dl>
+  <dt><font color="#000000">Speed: 115.2 kbps</font>
+  </dt><dt><font color="#000000">Bits: 8</font>
+  </dt><dt><font color="#000000">Parity: None</font>
+  </dt><dt><font color="#000000">Stopbits: 1</font>
+  </dt><dt>&nbsp;
+  </dt><dt><font color="#000000">Unlike the 21xx series and Nokia Cellularware,
+  data is sent over the FBUS which has both Rx and Tx lines.</font>
+  </dt><dt>&nbsp;
+</dt></dl>
+
+<p><font size="+1" face="Arial" color="#990000">Basic Packet Format</font></p>
+
+<p><font color="#000000">In a similar manner to the 21xx protocol.
+Packets sent from the 'phone must be acknowledged by the PC via
+a special packet and vice versa.</font></p>
+
+<p><font color="#000000">Most communication takes the form of:</font></p>
+
+<ul>
+  <li><font color="#000000">PC sends some type of "request"
+  or command packet</font>
+  </li><li><font color="#000000">6110 sends an acknowledgement</font>
+  </li><li><font color="#000000">6110 sends some response to the request
+  packet</font>
+  </li><li><font color="#000000">PC sends acknowledgment</font>
+</li></ul>
+
+<pre><b><font face="Arial" color="#990000">Format of packets from PC:</font></b>
+<font size="-1" color="#000000">+--+--+--+----+--+---+----------+-+--+--+----+----+</font>
+<font size="-1" color="#000000">|1e|00|0c|<b>type</b>|00|l<b>en</b>|...<b>body</b>...|<b>n</b>|<b>sq</b>|<b>0?</b>|   <b>chk</b>   |  </font>
+<font size="-1" color="#000000">+--+--+--+----+--+---+----------+-+--+--+----+----+</font>
+
+<font size="-1" color="#000000">type:  some indication of message type: </font>
+<font size="-1" color="#000000">       ( 1, 2, 4, 10, 11, 13, 14, 64 seen)</font>
+<font size="-1" color="#000000">len:   length in bytes from following byte to sq inclusive</font>
+<font size="-1" color="#000000">n:     if this packet is part of a group (i.e. long sms) indicates</font>
+<font size="-1" color="#000000">       how many more messages, including this one, there are</font>
+<font size="-1" color="#000000">sq:    packet sequence number,</font>
+<font size="-1" color="#000000">       least significant nibble: incremented in range 0..7 for each </font>
+<font size="-1" color="#000000">                                 new packet</font>
+<font size="-1" color="#000000">       most significant nibble: ? seems to be normally 4, but appears</font>
+<font size="-1" color="#000000">                                to be 0 if this is not the first packet</font>
+<font size="-1" color="#000000">                                in a group. 6 has also been seen </font>
+<font size="-1" color="#000000">0?:    0x00, only included if len is odd</font>
+<font size="-1" color="#000000">chk:   16 bit xor of all preceding 16 bit words</font>
+
+<b><font face="Arial" color="#990000">Format of ack from PC:</font></b>
+<font size="-1" color="#000000">+--+--+--+--+--+---+----+--+----+----+</font>
+<font size="-1" color="#000000">|1e|00|0c|7f|00|<b>len</b>|<b>type</b>|<b>sq</b>|   <b>chk  </b> |  </font>
+<font size="-1" color="#000000">+--+--+--+--+--+---+----+--+----+----+</font>
+
+<font size="-1" color="#000000">type:  corresponds to original message type</font>
+<font size="-1" color="#000000">len:   length in bytes, always 2</font>
+<font size="-1" color="#000000">sq:    last 3 bits indicate sequence number of packet being</font>
+<font size="-1" color="#000000">       acknowledged</font>, <font size="-1" color="#000000">most significant nibble is normally 0, </font>
+<font size="-1" color="#000000">       8 for sequence error?</font>
+<font size="-1" color="#000000">chk:   16 bit xor of all preceding 16 bit words.</font>
+
+
+
+<b><font face="Arial" color="#990000">Format of packets from 6110:</font></b>
+<font size="-1" color="#000000">+--+--+--+----+--+---+----------+-+--+--+----+----+</font>
+<font size="-1" color="#000000">|1e|0c|00|<b>type</b>|00|<b>len</b>|...<b>body</b>...|<b>n</b>|<b>sq</b>|<b>0?</b>|   <b>chk </b>  |  </font>
+<font size="-1" color="#000000">+--+--+--+----+--+---+----------+-+--+--+----+----+</font>
+
+<font size="-1" color="#000000">type:  some indication of message type</font>
+<font size="-1" color="#000000">       (1, 2, 4, 10, 11, 13, 14, 64 observed)</font>
+<font size="-1" color="#000000">len:   length in bytes from following byte to id inclusive</font>
+<font size="-1" color="#000000">n:     if this message is part of a group (i.e. long sms) indicates</font>
+<font size="-1" color="#000000">       how many more messages, including this one, there are</font>
+<font size="-1" color="#000000">sq:    packet sequence number,</font>
+<font size="-1" color="#000000">       least significant nibble: incremented in range 0..7 for each </font>
+<font size="-1" color="#000000">                                 new packet</font>
+<font size="-1" color="#000000">       most significant nibble: ? seems to be 4 normally, but appears</font>
+<font size="-1" color="#000000">                                to be 0 if this is not the first packet</font>
+<font size="-1" color="#000000">                                in a group. 6 has also been seen </font>
+<font size="-1" color="#000000">0?:    00, only included if len is odd</font>
+<font size="-1" color="#000000">chk:   16 bit xor of all preceding 16 bit words.</font>
+
+
+<b><font face="Arial" color="#990000">Format of ack from 6110:</font></b>
+<font size="-1" color="#000000">+--+--+--+--+--+---+----+--+----+----+</font>
+<font size="-1" color="#000000">|1e|0c|00|7f|00|<b>len</b>|<b>type</b>|<b>sq</b>|   <b>chk</b>   |  </font>
+<font size="-1" color="#000000">+--+--+--+--+--+---+----+--+----+----+</font>
+
+<font size="-1" color="#000000">type:  corresponds to original message type</font>
+<font size="-1" color="#000000">len:   length in bytes, always 02 </font>
+<font size="-1" color="#000000">sq:    last 3 bits indicate sequence number of packet being</font>
+<font size="-1" color="#000000">       acknowledged</font>, <font size="-1" color="#000000">most significant nibble is normally 0, </font>
+<font size="-1" color="#000000">       8 for sequence error?</font>
+<font size="-1" color="#000000">chk:   16 bit xor of all preceding 16 bit words.</font>
+
+
+<b><font face="Arial" color="#990000">Format of SMS-SUBMIT from PC:</font></b>
+
+<font size="-1" color="#000000">Referring to GSM 03.40 will make the following fields</font>
+<font size="-1" color="#000000">clearer. It should be noted that the format of the data</font>
+<font size="-1" color="#000000">in this packet is different to the SMS-SUBMIT TPDU. The fields</font>
+<font size="-1" color="#000000">are, however, the same. GSM 03.38 shows how the message itself</font>
+<font size="-1" color="#000000">is packed. This packet format is only valid as long as len &lt; 0x41</font>
+<font size="-1" color="#000000">if the message length would force the packet to be longer then the</font>
+<font size="-1" color="#000000">message is split across multiple packets. I'll post that </font>
+<font size="-1" color="#000000">information shortly.</font>
+<font size="-1" color="#000000">                                        </font>
+<font size="-1" color="#000000">+--+--+--+--+--+---+--+--+--+--+--+--+--+--+-------+--+--+--+--+</font>
+<font size="-1" color="#000000">|1e|00|0c|02|00|<b>len</b>|00|01|00|01|02|00|<b>sl</b>|<b>st</b>|..<b>sca</b>..|<b>fo</b>|00|<b>pi</b>|<b>dc</b>|</font>
+<font size="-1" color="#000000">+--+--+--+--+--+---+--+--+--+--+--+--+--+--+-------+--+--+--+--+</font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">+--+--+--+--------+------+---------+--+--+--+-------+</font>
+<font size="-1" color="#000000">|<b>ml</b>|<b>dl</b>|<b>dt</b>|...<b>da</b>...|..<b>vp</b>..|...<b>msg</b>...|01|<b>sq</b>|<b>0?</b>|  <b>chk</b>  |</font>
+<font size="-1" color="#000000">+--+--+--+--------+------+---------+--+--+--+-------+</font>
+
+<font size="-1" color="#000000">len:  packet length from following byte to sq inclusive</font>
+<font size="-1" color="#000000">sl:   SMSC number len in octets including st</font>
+<font size="-1" color="#000000">st:   SMSC number type e.g. 0x81-unknown 0x91-international 0xa1-national</font>
+<font size="-1" color="#000000">sca:  SMSC number. This is packed in BCD format ie. 2 digits per octet</font>
+<font size="-1" color="#000000">      it is a 10 byte field whether the number is 20 digits or not.</font>
+<font size="-1" color="#000000">fo:   first octet of TPDU, holds flas such as validity period format</font>
+<font size="-1" color="#000000">pi:   pid, protocol id</font>
+<font size="-1" color="#000000">dc:   dcs, data coding scheme</font>
+<font size="-1" color="#000000">ml:   message length in 7 bit chars</font>
+<font size="-1" color="#000000">dl:   destination address (da) length in used semi-octets,</font>
+<font size="-1" color="#000000">dt:   da type eg. 81-unknown 91-international a1-national</font>
+<font size="-1" color="#000000">da:   destination number packed as BCD ie. 2 digits per octet</font>
+<font size="-1" color="#000000">      this is a 10 byte field. Unused octets can sometimes hold</font>
+<font size="-1" color="#000000">      rubbish. </font>
+<font size="-1" color="#000000">vp:   validity period (1 integer byte or 7 octets - vpf) 7 byte field </font>
+<font size="-1" color="#000000">msg:  7 bit chars packed into bytes (see GSM 03.38)</font>
+<font size="-1" color="#000000">sq:   packet sequence number,</font>
+<font size="-1" color="#000000">      least significant nibble: incremented in range 0..7 for each </font>
+<font size="-1" color="#000000">                                 new packet</font>
+<font size="-1" color="#000000">      most significant nibble: ? seems to be 4 normally, but appears</font>
+<font size="-1" color="#000000">                               to be 0 if this is not the first packet</font>
+<font size="-1" color="#000000">                               in a group. 6 has also been seen</font>
+<font size="-1" color="#000000">0?:   pad bye, only present if len is odd</font>
+<font size="-1" color="#000000">chk:  6 bit xor of all preceding 16 bit words.</font>
+
+<font size="-1" color="#000000">Example:</font>
+
+<font size="-1" color="#000000">SMS sent to 987654321 via SMSC 12345678. First octet of TPDU</font>
+<font size="-1" color="#000000">(fo) = 0x11, Validity Period (vp) = 0xa7, </font>
+<font size="-1" color="#000000">Data Coding Scheme (dcs) = 0 and Protocol Identifier (pid) = 0.</font>
+<font size="-1" color="#000000">Message reads "hello" - 0xe8 0x32 0x9b 0xfd 0x06 in packed format:</font>
+
+<font size="-1" color="#000000">1e 00 0c 02 00 31 00 01 00 01 02 00 06 81 21 43 65 87 f9 63 a8 00 00</font>
+<font size="-1" color="#000000">00 11 00 00 00 05 09 81 89 67 45 23 f1 b8 81 20 15 63 a7 00 00 00 00 </font>
+<font size="-1" color="#000000">00 00 e8 32 9b fd 06 01 44 00</font>
+<font size="-1" color="#000000"></font></pre>
+
+<p><font size="+1" face="Arial" color="#990000">Phonebook Packet
+Format</font></p>
+
+<p><font face="Times New Roman" color="#000000">In the following
+descriptions, ME = mobile equipment (i.e. the phone or it's memory)
+and SM = sim card.</font></p>
+
+<pre><b><font face="Arial" color="#990000">PC reading phonebook entry:</font></b><font size="-1" color="#000000">
++--+--+--+--+--+---+--+--+--+--+--+--+--+--+--+--+---+
+|1e|00|0c|03|00|<b>len</b>|00|01|00|01|<b>st</b>|<b>ix</b>|00|01|<b>sq</b>|<b>0?</b>|<b>chk</b>| 
++--+--+--+--+--+---+--+--+--+--+--+--+--+--+--+--+---+</font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">st:   storage type e.g. 02-ME 03-SM etc.
+ix:   index</font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">e.g. to read location with index 1 from the sim: </font>
+<font size="-1" color="#000000">1e 00 0c 03 00 09 00 01 00 01 03 01 00 01 46 00 57 0a </font>
+<font size="-1" color="#000000"></font>
+<b><font face="Arial" color="#990000">6110 responding to a phonebook read:</font></b><font size="-1" color="#000000">
++--+--+--+--+--+---+--+--+--+--+--+--+----+--+---+--+--+--+--+--+---+
+|1e|0c|00|03|00|<b>len</b>|01|08|00|02|00|<b>tl</b>|<b>text</b>|<b>nl</b>|<b>num</b>|05|00|01|<b>sq</b>|<b>0?</b>|<b>chk</b>|
++--+--+--+--+--+---+--+--+--+--+--+--+----+--+---+--+--+--+--+--+---+</font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">tl:   name text length
+text: entry name text in ASCII
+nl:	 number len (in digits)
+num:  number in ASCII</font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">e.g. response to reading sim location 1 containing 
+    "Action Line", 0345888444:
+1e 0c 00 03 00 20 01 08 00 02 00 0b 41 63 74 69 6f 6e 20 4c 69 6e 65
+0a 30 33 34 35 38 38 38 34 34 34 05 00 01 44 5d 18 </font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">Reading empty location 1 from the phone returns (as expected):
+1e 0c 00 03 00 0b 01 08 00 02 00 00 00 05 00 01 47 00 58 0a 
+i.e. text and number lengths are 0 and there are no actual text
+     or number fields</font>
+<font size="-1" color="#000000"></font>
+<b><font face="Arial" color="#990000">PC writing a phonebook entry:</font></b><font size="-1" color="#000000">
++--+--+--+--+--+---+--+--+--+--+--+--+--+----+--+---+--+--+--+--+---+
+|1e|00|0c|03|00|<b>len</b>|00|01|00|04|<b>st</b>|<b>ix</b>|<b>tl</b>|<b>text</b>|<b>nl</b>|<b>num</b>|ff|01|<b>sq</b>|<b>0?</b>|<b>chk</b>| 
++--+--+--+--+--+---+--+--+--+--+--+--+--+----+--+---+--+--+--+--+---+</font>
+<font size="-1" color="#000000">
+st:   storage type 02-ME 03-SM etc.
+ix:   index
+tl:   name text length
+text: entry name text in ASCII
+nl:	 number len (in digits)
+num:  number in ASCII</font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">e.g. writing an entry "Test", 1234 to location index 2 to the phone memory: </font>
+<font size="-1" color="#000000">1e 00 0c 03 00 13 00 01 00 04 02 02 04 54 65 73 74 04 31 32 33 34 ff 01 47 00 bf 33 </font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000"></font>
+<b><font face="Arial" color="#990000">6110 responding to phonebook write:</font></b><font size="-1" color="#000000">
+</font>
+<font size="-1" color="#000000">Success:                   
+1e 0c 00 03 00 06 01 08 00 05 01 46 1e 42 
+                           ^^-indicates success?
+ 
+Failure due to index being out of range:
+1e 0c 00 03 00 07 01 08 00 06 74 01 43 00 28 07 
+       indicates failure---^^ ^^--indicates reason?</font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000"></font>
+<b><font face="Arial" color="#990000">PC requesting storage parameters:</font></b><font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">+--+--+--+--+--+---+--+--+--+--+--+--+--+--+---+
+|1e|00|0c|03|00|<b>len</b>|00|01|00|07|<b>st</b>|01|<b>sq</b>|<b>0?</b>|<b>chk</b>|
++--+--+--+--+--+---+--+--+--+--+--+--+--+--+---+</font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">st:   storage type</font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">e.g. requesting parameters for the sim card:
+1e 00 0c 03 00 07 00 01 00 07 03 01 43 00 52 03 </font>
+<font size="-1" color="#000000">
+</font><b><font face="Arial" color="#990000">6110 responding with storage parameters:</font></b><font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">+--+--+--+--+--+---+--+--+--+--+--+--+--+--+--+--+---+
+|1e|0c|00|03|00|<b>len</b>|01|08|00|08|<b>st</b>|<b>fr</b>|<b>us</b>|01|<b>sq</b>|<b>0?</b>|<b>chk</b>|
++--+--+--+--+--+---+--+--+--+--+--+--+--+--+--+--+---+</font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">st:   storage type
+fr:   number of free locations
+us:   number of used locations</font>
+<font size="-1" color="#000000"></font>
+<font size="-1" color="#000000">e.g. responding for the sim storage which has 90 locations
+     59 of which are used:
+1e 0c 00 03 00 09 01 08 00 08 03 1f 3b 01 43 00 64 18 </font>
+</pre>

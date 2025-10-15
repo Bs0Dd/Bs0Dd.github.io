@@ -1,0 +1,132 @@
+<h1 align="CENTER">Keypress frames confirmed!</h1>
+<hr>
+<p>
+<strong>Gary Reuter</strong> (<a href="mailto:garyr@cartman.icaxon.com?subject=Re:%20Keypress%20frames%20confirmed!"><em>garyr@cartman.icaxon.com</em></a>)<br>
+<em>Mon, 10 May 1999 20:58:02 -0400 (EDT)</em>
+</p>
+<hr>
+<p>
+Hi again!
+<br>
+I was right about the keypad entry... The frames of type 0x0C involve keypad input.
+<br>
+I find this discovery promising:  this could lead to functionality that NCDS does
+<br>
+NOT have!  And very easy to implement (I think...).
+<br>
+The GUI could be an image of the phone and you just click around to press
+<br>
+the keys.... at least for a "quick-n-dirty" implementation.
+<br>
+(Pavel, I'm also worried about having something that looks identical to a commercial product...
+<br>
+couldn't they try to sue us? :(  )
+<br>
+</p><p></p><p>Frame description:
+<br>
+</p><p>1E 00 0C 0C 00 ln 00 01 00 42 01 kp 01 sq ck-sm
+<br>
+</p><p>1-3rd oct:   put in by FB61_TX_SendMessage()
+<br>
+4th octet:   type 0x0C
+<br>
+6th octet:   length -- All my tests so far have been with ln = 0x08
+<br>
+7-9th oct:   FB61_FRAM_HEADER
+<br>
+10th octet:  I think this might be a subtype... more tests needed.
+<br>
+11th octet:  not sure yet -- could be length of keypress...
+<br>
+12th octet:  kp  keypad pressed... see below
+<br>
+13th octet:  not sure what this is...
+<br>
+</p><p></p><p>kp:
+<br>
+</p><p>Hex	Keypad
+<br>
+01	1
+<br>
+..	..	(short form for (0x01..0x09) = (1..9)
+<br>
+09	9
+<br>
+0A	0	zero
+<br>
+0B	#
+<br>
+0C	*
+<br>
+0D	Pwr	power button
+<br>
+0E	Tlk	Talk button
+<br>
+0F	End	End button
+<br>
+10	Vl+	Volume up
+<br>
+11	Vl-	Volume down
+<br>
+12	Bksp	** Backspaces phone/msg entry, but not CLEAR button
+<br>
+13	unknown
+<br>
+14	unknown
+<br>
+15	unknown
+<br>
+16	unknown
+<br>
+17	Up	up arrow (scroll up)
+<br>
+18	Dn	down arrow (scroll down)
+<br>
+19	Menu	Menu / Options (button at lower left of screen)
+<br>
+1A	Name	Names / Exit   (button at lower right of screen)
+<br>
+</p><p>1B onwards:	don't know but they do produce a beep and light up the
+<br>
+keypad as if a key had been pressed.
+<br>
+</p><p></p><p>I've also discovered that the 'req2' in my patch isn't necessary when the
+<br>
+timeout is long enough... (just comment it out and turn your phone on and
+<br>
+off again with only req1 and a nice long pause before the SwitchPower
+<br>
+exits).  
+<br>
+</p><p>Sending the "end" key from the main menu locks the keyboard.  I haven't
+<br>
+yet tried putting several keypresses together to unlock the keyboard
+<br>
+(which would be necessary for anything else to happen using this
+<br>
+function).
+<br>
+</p><p>Funny thing to try:  comment out the send for req2 and change req1 to send
+<br>
+the a scroll keypress (0x17 or 0x18)... now watch your phone book scroll
+<br>
+by!!!
+<br>
+</p><p></p><p>-Gary
+<br>
+</p><p></p><p>PS:  This particular frame type has been quite fun to play with so far, partly because
+<br>
+it doesn't require much programming ability (!!!), and also because NCDS doesn't seem to use
+<br>
+these frames very often.
+<br>
+</p><p>Has anyone tried all the AT commands (best source by Nokia is the DataCard AT command specs)?
+<br>
+<em>&gt;From my experiments, definately not all of them are implemented in the NCDS softmodem... but
+</em><br>
+from this discovery, I'm tempted to believe the fbus protocol can do alot more than NCDS alone
+<br>
+can.
+<br>
+</p><p><!-- body="end" -->
+</p><hr>

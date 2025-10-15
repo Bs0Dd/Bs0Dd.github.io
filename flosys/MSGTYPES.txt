@@ -1,0 +1,193 @@
+Here are some more message types for the GSM-900 / GSM-1800 phones 5110 / 6110 / 6150
+They are originally FBUS commands most of them could be used as MBUS Commands also.
+Maybe with little variations, just use them as a guideline.
+They should work with a 6190 also.
+
+
+MBUS Header:
+0x1F 0x00 0x1D "CMD" 0x00 LEN "data as on table" SEQ CRC 
+
+CMD 
+
+0x01: Call Information
+
+s	make data call			0x00, 0x01, 0x00, 0x01, numlen,"number",0x01,0x02,0x01,0x05,0x81,0x01,0x00,0x00,0x01,0x02,0x0a,0x07,0xa2,0xc8,0x81,0x21,0x15,0x63,0xa8,0x00,0x00
+s	make voice call			0x00, 0x01, 0x00, 0x01, numlen,"number",0x05,0x01,0x01,0x05,0x81,0x01,0x00,0x00,0x01
+r	call seq number for this call	0x01, 0x08, 0x00, 0x02, callseqnr
+r	established data call		0x01, 0x08, 0x00, 0x03, callseqnr, datacalltype  (0x01), 0x00, 0x01, 0x03, 0x09, 0x91, 0x07, 0xa2, 0x88, 0x81, 0x21, 0x15, 0x63, 0xa6
+r	established voice call		0x01, 0x08, 0x00, 0x03, callseqnr, voicecalltype (0x05), 0x00, 0x01, 0x03, 0x02, 0x91, 0x00
+
+r	destignation not available	0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x01, 0x00	unallocated number (Q.931 ISDN cause elements)
+r	missed call (incoming call end)	0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x10, 0x00	normal call clearing
+r	line is busy			0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x11, 0x00	user busy
+r	not available			0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x12, 0x00	no user responding
+r	no answer from user		0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x13, 0x00	no answer from user 
+r	call rejected			0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x15, 0x00	call rejected
+r	called number invalid		0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x1c, 0x00	invalid number format
+r	network busy			0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x29, 0x00   	temporary failure
+
+r	end of datacall,rlp termination	0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0x7f, 0x00	interworking unspecified
+r	error in data call ?		0x01, 0x08, 0x00, 0x04, callseqnr, 0x65, cause 0xa0, 0x00
+
+r	incoming call alert		0x01, 0x08, 0x00, 0x05, callseqnr, calltype (0x05=voice), numlen, "number", namelen, "name", 0x00
+
+r	answered call			0x01, 0x08, 0x00, 0x07, callseqnr
+r	terminated call			0x01, 0x08, 0x00, 0x09, callseqnr, 0x00
+r	hangup by phone			0x01, 0x08, 0x00, 0x0a, callseqnr, 0x87
+r	wrong terminal init ?		0x01, 0x08, 0x00, 0x40
+s	initiate terminal		0x00, 0x01, 0x00, 0x42, 0x05, 0x01,0x07,0xa2,0xc8,0x81,0x21,0x15,0x63,0xa8,0x00,0x00,0x07,0xa3,0xb8,0x81,0x20,0x15,0x63,0x80,0x01,0x60
+r	response of init terminal	0x01, 0x08, 0x00, 0x43, 0x02
+r	error response - illegal format	0x01, 0x08, 0x00, 0x44, 0x7d
+r	error response - unknown	0x01, 0x08, 0x00, 0x44, 0x83
+
+0x02: SMS handling
+    s Send SMS message      { 0x00 01, 0x02, 0x00 (SEND REQUEST), ... }
+    r Message sent          { 0x00 02 }
+    r Send failed           { 0x00 03 }
+    s Get SMS message       { 0x00 07, 0x02, location, 0x01, 0x64 }
+    s Initiate connection   { 0x00 0d, 0x00, 0x00, 0x02 }
+    r SMS message received  { 0x00 10, ...... } (whole message)
+    s Get SMS center        { 0x00 33, 0x64, priority }
+    r SMS center received   { 0x00 34, priority, ... } 21-> smscenter number (BCD), 33-> smscenter name
+    r SMS center error recv { 0x00 35 }
+0x03: Phonebook functions
+    s Get mem location      { 0x00 01, memtype, location, 0 }
+    r mem location recvd    { 0x00 02, memtype,namelen,"name",numlen,"number",groupID }
+    r mem loc error recvd   { 0x00 03, errtype }
+      errtype: 0x7d: invalid memory type
+    s Set mem location      { 0x00 04, memtype,location,namelen,"Name",numlen,"number",groupID }
+    r mem set OK            { 0x00 05 }
+    r mem set error         { 0x00 06, errtype }
+      errtype: 0x7d: name is too long
+    s Mem status request    { 0x00 07, memtype }
+    r Mem status recvd      { 0x00 08, memtype, free, used }
+    r Mem status error recv { 0x00 09, errtype }
+      errtype: 0x6f: mem status error
+               0x7d: invalid memory type
+               0x8d: waiting for pin
+    s Get caller group name { 0x00 10, groupID }
+    r Get caller group name { 0x00 11, groupID, size, "Name", ringtone, graphics?1:0, ?,?,?, {72x14 logo}, ?,? }
+    r Get call.group error  { 0x00 12 }
+    s Get speed dial        { 0x00 16, index(1-9) }
+    r Get speed dial OK     { 0x00 17, mem.type, location }
+                            where
+                                mem.type: 0x02: ME        (== 0 if not stored)
+                                          0x03: SIM
+                                location: memory location (== 0 if not stored)
+    r Get speed dial error  { 0x0018 }
+    s Set speed dial        { 0x0019, index(1-9), mem.type, location }
+    r Set speed dial OK     { 0x001a }
+    r Set speed dial error  { 0x001b }
+
+0x04: Phone Status
+    s Phone status          { 0x0001 }
+    r Phone status          { 0x0002, mode, signal str, ???, pwr, batt.level }
+      mode: 1: registered within the network
+            2: call in progress
+            3: waiting for pin
+            4: powered off
+      pwr: 1: AC/DC
+           2: battery
+    s Request Phone ID      { 0x0003 }
+    r RequestPhone ID       { 0x0004, 0x01, "imei", 0, "model", 0, "prod.code", 0, "HW", 0, "firmware", 0x00, 0x01 }
+
+0x05: Welcome Messages / pictures
+    s Get welcome message   { 0x0016, 0x01 }
+    s Set welcome message   { 0x0018, 0x01, 0x02, text }
+    s Unset welcome message { 0x0018, 0x01, 0x03 }
+    s Request of picture    { 0x0033, 0x01 }
+0x07: Key assignments
+    s Get key assignments   { 0x0040, 0x01 }
+      (answer in '0x0c')
+
+0x08: PIN request
+    s ??? (maybe status)    { 0x0007, 0x01, 0x01 }
+    r pin recvd             { 0x0008, accepted }
+      accepted: 0x0c: OK
+    s entering pin          { 0x000a, 0x02, "PIN", 0x00 }
+
+0x0a: Network status
+    r network registration  { 0x0071, ?,?,?,length,netstatus,netsel,cellIDH,cellIDL,lacH,lacL,netcode,netcode,netcode }
+    s Key duplication on/off{ 0x0044, on? 0x01: 0x02 }
+
+0x0c: Key assignments
+    r Get key assignments   { 0x00, 0x01, 0x08, 0x00, {key '1'}, 0x00,{key '2'} ... {key '0'}, 0,0,0, {symbols}, 0 }
+                            where {key '0'} => ' ', '0'
+0x0d: Status
+    s Status request        { 0x0051 }
+    r Status                { 0x0052, no. of byte pairs, {byte pair} }
+                            where {byte pair}: {cmd, 1:off 2:on}
+                            cmd: 1: call in progress
+                                 2: ???
+                                 3: have unread sms
+                                 4: voice call active
+                                 5: fax call active
+                                 6: data call active
+                                 7: key lock active
+                                 8: is SMS storage full
+    s Display status        { 0x0053, 1:on 2:off }
+      (will send displayed messages with x,y coordinates)
+0x11: Phone clock & alarm
+    s set date and time     { 0x0060, 1,1,7,yearh,yearl,month,mday,hour,min,0x00 }
+    r date and time set     { 0x0061 }
+    s get date and time     { 0x0062 }
+    r date and time recvd   { 0x0063,?,?,?,?,yearh,yearl,month,mday,hour,min,second }
+    s set alarm             { 0x006b, 1,32,3,0x02(on-off),hour,min,0x00 }
+    r alarm set             { 0x006c }
+    s get alarm             { 0x006d }
+    r alarm received        { 0x006e,?,?,?,?,alrm(==2:on),hour,min }
+0x12: Connect to NBS port
+    s Send                  {+0x0c, 0x01, 0x06, 0x05, 0x04,destporth,destportl,srcporth,srcportl,...
+      (without 0,1,0 header  -- for oplogo, cli, ringtone etc upload)
+0x13: Calendar notes
+    s Write calendar note   { 0x0064, 0x01, 0x10, length, type, yearH, yearL, month, day, hour, timezone,
+                              alarm?(alarm yearH, yearL, month, day, hour, timezone): (0,0,0,0,0,0),
+                              textlen, "text" }
+    r Write cal.note report { 0x0065, return }
+                            where return: 0x01: ok
+                                          0x73: failure
+    s Calendar notes set    { 0x0066... }
+    r Calendar note recvd   { 0x0067, 0x01, ?, length, type, yrH,yrL,mon,day,hr,tz,alrm yrH,yrL,mon,day,hr,tz,
+                              textlen, "text" }
+    r Cal.note recvd error  { 0x0067, err }
+                            where err: 0x93: not available
+                                      (0x01: OK)
+                                       other: error
+    s Delete cal.note       { 0x0068, location }
+    r Del. cal.note report  { 0x0069, err }
+                            where err: 0x01: OK
+                                       0x93: cannot delete
+0x14: SMS funcs
+    s Write SMS to outbox   { 0x0004, 
+    r SMS message frame rcv { 0x0008,subtype,?,num,?,BCD(smscenter)...} 20->type, 22->status
+      type: 0x06: delivery report 
+                  status: 0x00: delivered
+                          0x30: pending
+                          0x46: failed
+            0x09: reading failed
+                  subtype: 0x02: invalid mem type
+                           0x07: empty SMS location
+    s Delete SMS message    { 0x000a, 0x02, location }
+    r Delete OK             { 0x000b }
+    s SMS status request    { 0x0036, 0x64 }
+    r SMS status            { 0x0037,?,?,?,?,?,?,msgnumber,unread }
+    r SMS status error      { 0x0038 }
+
+0x40: Security commands
+    s Enable code sending   { 0x0164, 0x01 }
+    s Get security code     { 0x016e, 0x01 }
+    r Get security code     { 0x016e,?,?, sec code (text) }
+    s Netmonitor            { 0x7eXX }
+                            where: XX: F0: reset
+                                       F1: off
+                                       F2: field test menus
+                                       F3: developer menus
+0x64:
+    s Phone ID request      { 0x0010 }
+    r Phone ID recvd        { "NOKIA", "imei", 0, "model", 0, "prod.code", 0, "HW", 0, "firmware", magic bytes x 4 ... }
+
+0x7f: Acknowledge           {+type, seq }
+
+0xd0: Power on message seq 1 (receive only)
+
+0xf4: Power on message seq 2 (receive only)

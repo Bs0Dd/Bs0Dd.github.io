@@ -1,0 +1,599 @@
+<h1>SMS related commands</h1>
+
+<blockquote>
+Hint: [RX] (TX)
+</blockquote>
+
+<h1><a name="Message Received"></a>Message Received Notification [0x30]</h1>
+
+<blockquote>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field Name</td><td>Length</td><td>Note</td></tr>
+<tr><td><a href="#MEM">MEM</a></td><td>1</td><td>Memory type (SIM/Phone)</td></tr>
+<tr><td><a href="#LOC">LOC</a></td><td>1</td><td>Memory location (1...)</td></tr>
+<tr><td>?</td><td>1</td><td>most of time 0x04</td></tr>
+<tr><td><a href="#TP-PID">PID</a></td><td>1</td><td>Protocol Identifier</td></tr>
+<tr><td><a href="#TP-DCS">DCS</a></td><td>1</td><td>Data Coding Scheme</td></tr>
+<tr><td><a href="#TP-SCTS">SCTS</a></td><td>7</td><td>Service Centre Time Stamp</td></tr>
+<tr><td>UDL</td><td>1</td><td>User Data Length</td></tr>
+<tr><td>OA</td><td><a href="#PNUM">PNUM</a></td><td>Originating Address</td></tr>
+<tr><td>SCA</td><td><a href="#PNUM">PNUM</a></td><td>Service Centre Address</td></tr>
+<tr><td><a href="#Type of Address">TA</a></td><td>1</td><td>Type of OA</td></tr>
+</tbody></table>
+</blockquote>
+
+<h1><a name="Reading SMS"></a>Reading SMS</h1>
+
+<blockquote>
+<h3><a name="Request SMS"></a>Request SMS (0x25)</h3>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td><a href="#MEM">MEM</a></td><td>1</td><td>Memory Area</td></tr>
+<tr><td><a href="#LOC">LOC</a></td><td>1</td><td>Location in specified memory area</td></tr>
+</tbody></table>
+
+<p>In successful request, phone sends one <a href="#SM Header">SMS Header</a>
+and one or more <a href="#SM Data">SMS Data</a> packets. In failure, phone
+sends <a href="#SM Request Failed">SMS Request Failed</a> packet.
+
+</p><h3><a name="SM Header"></a>SMS Header [0x2c]</h3>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td><a href="#MEM">MEM</a></td><td>1</td><td>Memory Area</td></tr>
+<tr><td><a href="#LOC">LOC</a></td><td>1</td><td>Location in specified memory area</td></tr>
+<tr><td>STATUS</td><td>2</td><td>0701: Saved, not sent<br>0501: Sent<br>0304: Received, unread<br>0204: Unread<br>0104: Received, read</td></tr>
+<tr><td><a href="#TP-PID">PID</a></td><td>1</td><td>Protocol Identifier</td></tr>
+<tr><td><a href="#TP-DCS">DCS</a></td><td>1</td><td>Data Coding Scheme</td></tr>
+<tr><td><a href="#TP-SCTS">SCTS</a></td><td>7</td><td>Service Centre Time Stamp</td></tr>
+<tr><td>UDL</td><td>1</td><td>User Data Length</td></tr>
+<tr><td>SCA</td><td><a href="#PNUM">PNUM</a></td><td>Service Centre Address</td></tr>
+<tr><td>OA</td><td><a href="#PNUM">PNUM</a></td><td>Originating Address</td></tr>
+<tr><td><a href="#Type of Address">TA</a></td><td>1</td><td>Type of OA</td></tr>
+</tbody></table>
+
+<h3><a name="SM Data"></a>SMS Data [0x27]</h3>
+
+Message is received in max of 55 octet blocks
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>SEQ</td><td>1</td><td>Sequence number of block</td></tr>
+<tr><td>UD</td><td>1...55</td><td>Block of User Data</td></tr>
+</tbody></table>
+
+Sequence number starts from 0x01 and is increased by 1 after each block
+transmitted.
+
+<h3><a name="SM Request Failed"></a>SMS Request Failed [0x2d]</h3>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>EID</td><td>1</td><td>Error Identifier</td></tr>
+</tbody></table>
+</blockquote>
+
+<h1><a name="Deleting SMS"></a>Deleting SMS (0x26)</h1>
+
+<blockquote>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td><a href="#MEM">MEM</a></td><td>1</td><td>Memory type</td></tr>
+<tr><td><a href="#LOC">LOC</a></td><td>1</td><td>Location in memory</td></tr>
+</tbody></table>
+
+<h3><a name="SM Deleted"></a>SMS Deleted [0x2e]</h3>
+<h3><a name="SM Delete Failed"></a>SMS Delete Failed [0x2f]</h3>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>EID</td><td>1</td><td>Error Identifier</td></tr>
+</tbody></table>
+</blockquote>
+
+<h1><a name="Sending SMS"></a>Sending SMS</h1>
+
+<blockquote>
+<h3><a name="Sending SMS Header"></a>Sending SMS Header (0x23)</h3>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td><a href="#FO">FO</a></td><td>1</td><td>"The First Octet"</td></tr>
+<tr><td><a href="#TP-PID">PID</a></td><td>1</td><td>Protocol Identification</td></tr>
+<tr><td><a href="#TP-DCS">DCS</a></td><td>1</td><td>Data Coding Scheme</td></tr>
+<tr><td><a href="#TP-Validity-Period">VP</a></td><td>7</td><td>Validity Period</td></tr>
+<tr><td>UDL</td><td>1</td><td>User Data Length</td></tr>
+<tr><td>SCA</td><td><a href="#PNUM">PNUM</a></td><td>Service Centre Address</td></tr>
+<tr><td>DA</td><td><a href="#PNUM">PNUM</a></td><td>Destination Address</td></tr>
+</tbody></table>
+
+<h3><a name="Sending SMS Message"></a>Sending SMS Message (0x27)</h3>
+
+Message is sent in max size of 55 octet blocks
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>SEQ</td><td>1</td><td>Sequence number of the block</td></tr>
+<tr><td>UD</td><td>1...55</td><td>Block of User Data</td></tr>
+</tbody></table>
+
+<h3><a name="Message Sent"></a>Message Sent [0x28]</h3>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>MR</td><td>1</td><td>Message Reference</td></tr>
+</tbody></table>
+
+<h3><a name="Try Later"></a>Try Later [0x29]</h3>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>E1</td><td>1</td><td>Error</td></tr>
+<tr><td>E2</td><td>1</td><td>Error</td></tr>
+</tbody></table>
+</blockquote>
+
+<h1><a name="Delivery Report"></a>Delivery Report [0x32]</h1>
+
+<blockquote>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>?</td><td>1</td><td>0x06,0x02 ???</td></tr>
+<tr><td>DT</td><td><a href="#TP-SCTS">TP-SCTS</a></td><td>Delivery time</td></tr>
+<tr><td>SCTS</td><td><a href="#TP-SCTS">TP-SCTS</a></td><td>Report time</td></tr>
+<tr><td>?</td><td>1</td><td>always 0x00 ?</td></tr>
+<tr><td>MR</td><td>1</td><td>Message Reference</td></tr>
+<tr><td>DA</td><td><a href="fbus.html#PNUM">PNUM</a></td><td>Destination Address</td></tr>
+<tr><td>SCA</td><td><a href="fbus.html#PNUM">PNUM</a></td><td>Service Centre Address</td></tr>
+<tr><td><a href="#Type of Address">TA</a></td><td>1</td><td>Type of DA</td></tr>
+</tbody></table>
+</blockquote>
+
+<hr width="100%">
+<h1><a name="SM Settings in Phone"></a>SMS Settings in Phone</h1>
+
+<blockquote>
+<h3><a name="Write SMS Settings to phone"></a>Write SMS Settings to phone (0x3c)</h3>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td><a href="#MASK">MASK</a></td><td>1</td><td>Bit mask, which values are saved to ME</td></tr>
+<tr><td><a href="#TP-PID">PID</a></td><td>1</td><td><a href="#Send SMS As">Send Messages As...</a></td></tr>
+<tr><td>UK</td><td>1</td><td>Unknown</td></tr>
+<tr><td><a href="#TP-Validity-Period">VP</a></td><td>1</td><td><a href="#TP_VP_Relative">Validity Period in Relative format</a></td></tr>
+<tr><td>RP</td><td>1</td><td>Reply Path</td></tr>
+<tr><td>SRR</td><td>1</td><td>Relivery Reports</td></tr>
+<tr><td>UA</td><td><a href="fbus.html#PNUM">PNUM</a></td><td>Unused Address</td></tr>
+<tr><td>SCA</td><td><a href="fbus.html#PNUM">PNUM</a></td><td>Service Centre Address</td></tr>
+<tr><td><a href="#Type of Address">TA</a></td><td>1</td><td>Type of UA (if 0, phone sets to correct value)</td></tr>
+</tbody></table>
+
+<blockquote>
+<a name="Send SMS As"></a>
+PID Values for common SMS formats:<br>
+<table width="80%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Value</td><td>SEND MESSAGES AS</td></tr>
+<tr><td>00</td><td>Text</td></tr>
+<tr><td>22</td><td>Fax</td></tr>
+<tr><td>24</td><td>Voice</td></tr>
+<tr><td>25</td><td>ERMES</td></tr>
+<tr><td>26</td><td>Paging</td></tr>
+<tr><td>2d</td><td>E-mail</td></tr>
+<tr><td>31</td><td>X.400</td></tr>
+</tbody></table>
+Look <a href="#TP-PID">TP-PID</a> for more info about PID.
+</blockquote>
+
+<h3><a name="SMS Settings Wrote [0x3d]"></a>SMS Settings Wrote [0x3d]</h3>
+<h3><a name="SMS Settings Write Error [0x3e]"></a>SMS Settings Write Error [0x3e]</h3>
+
+<h3><a name="MASK"></a>MASK</h3>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Bit</td><td>Allow change to</td></tr>
+<tr><td>7</td><td>??</td></tr>
+<tr><td>6</td><td>SRR</td></tr>
+<tr><td>5</td><td>RP</td></tr>
+<tr><td>4</td><td>SCA</td></tr>
+<tr><td>3</td><td>UA</td></tr>
+<tr><td>2</td><td>VP</td></tr>
+<tr><td>1</td><td>UK</td></tr>
+<tr><td>0</td><td>PID</td></tr>
+</tbody></table>
+
+<h3><a name="Read SMS Settings from phone"></a>Read SMS Settings from phone (0x3f)</h3>
+<h3><a name="SMS Settings not available [0x40]"></a>SMS Settings not available [0x40]</h3>
+<h3><a name="SMS Settings from phone"></a>SMS Settings from phone [0x41]</h3>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>MEM</td><td>1</td><td>Selected memory</td></tr>
+<tr><td>SMS's in phone</td><td>1</td><td>Number of SMS's in Phone</td></tr>
+<tr><td>Unread -''-</td><td>1</td><td>Number of Unread SMS's in Phone</td></tr>
+<tr><td>SMS's in SIM</td><td>1</td><td>Number of SMS's in SIM</td></tr>
+<tr><td>Unread -''-</td><td>1</td><td>Number of Unread SMS's in Phone</td></tr>
+<tr><td><a href="#TP-PID">PID</a></td><td>1</td><td>Protocol Identifier</td></tr>
+<tr><td>UK</td><td>1</td><td>Unknown</td></tr>
+<tr><td><a href="#TP-Validity-Period">VP</a></td><td>1</td><td>Validity Period in Relative format</td></tr>
+<tr><td>RP</td><td>1</td><td>Reply Path</td></tr>
+<tr><td>SRR</td><td>1</td><td>Delivery Reports</td></tr>
+<tr><td>UA</td><td><a href="fbus.html#PNUM">PNUM</a></td><td>Unknown Address</td></tr>
+<tr><td>SCA</td><td><a href="fbus.html#PNUM">PNUM</a></td><td>Service Centre Address</td></tr>
+<tr><td><a href="#Type of Address">TA</a></td><td>1</td><td>Type of UA</td></tr>
+</tbody></table>
+<p>
+First five fields are read-only data and can not be modified via FBUS.
+</p></blockquote>
+
+<hr width="100%">
+<h1><a name="TP-PID"></a>Protocol Identifier (TP-PID)</h1>
+
+<blockquote>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Bit 7</td><td>Bit 6</td><td>Usage</td></tr>
+<tr><td>0</td><td>0</td><td>Assigns bits 0..5 as defined below</td></tr>
+<tr><td>0</td><td>1</td><td>Assigns bits 0..5 as defined below</td></tr>
+<tr><td>1</td><td>0</td><td>Reserved</td></tr>
+<tr><td>1</td><td>1</td><td>Assigns bits 0..5 for SC specific use</td></tr>
+</tbody></table>
+
+In case where bits 7 and 6 both are 0:
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Bit 5</td><td>Description</td></tr>
+<tr><td>0</td><td>no interworking, but SME-to-SME protocol</td></tr>
+<tr><td>1</td><td>telematic interworking</td></tr>
+</tbody></table>
+
+In the case of telematic interworking, the following five bit patterns
+in bits 4..0 are used to indicate types of telematic devices:
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Bits 4..0</td><td>Description</td></tr>
+<tr><td>00000</td><td>implicit - device type is specific to this SC, or can be concluded on the basis of the address</td></tr>
+<tr><td>00001</td><td>telex (or teletex reduced to telex format)</td></tr>
+<tr><td>00010</td><td>group 3 telefax</td></tr>
+<tr><td>00011</td><td>group 4 telefax</td></tr>
+<tr><td>00100</td><td>voice telephone (i.e. conversion to speech)</td></tr>
+<tr><td>00101</td><td>ERMES (European Radio Messaging System)</td></tr>
+<tr><td>00110</td><td>National Paging System (known to the SC)</td></tr>
+<tr><td>00111</td><td>Videotex (T.100/T.101)</td></tr>
+<tr><td>01000</td><td>teletex, carrier unspecified</td></tr>
+<tr><td>01001</td><td>teletex, in PSPDN</td></tr>
+<tr><td>01010</td><td>teletex, in CSPDN</td></tr>
+<tr><td>01011</td><td>teletex, in analog PSTN</td></tr>
+<tr><td>01100</td><td>teletex, in digital ISDN</td></tr>
+<tr><td>01101</td><td>UCI (Universal Computer Interface, ETSI DE/PS 3 01-3)</td></tr>
+<tr><td>01110..<br>..01111</td><td>(reserved, 2 combinations)</td></tr>
+<tr><td>10000</td><td>a message handling facility (known to the SC)</td></tr>
+<tr><td>10001</td><td>any public X.400-based message handling system</td></tr>
+<tr><td>10010</td><td>Internet Electronic Mail</td></tr>
+<tr><td>10011..<br>..10111</td><td>(reserved, 5 combinations)</td></tr>
+<tr><td>11000..<br>..11110</td><td>values specific to each SC, usage based on mutual agreement between the SME and the SC (7 combinations available for each SC)</td></tr>
+<tr><td>11111</td><td>A GSM mobile station. The SC converts the SM from 
+the received TP-DCS to any data coding scheme supported by that MS (e.g.
+ the default).</td></tr>
+</tbody></table>
+
+If bit 5 has value 1 in an SMS-SUBMIT PDU, it indicates that the SME
+is a telematic device of a type which is indicated in bits 4..0, and requests
+the SC to convert the SM into a form suited for that device type. If the
+destination network is ISDN, the SC must also select the proper service
+indicators for connecting to a device of that type.
+<p>If bit 5 has value 1 in an SMS-DELIVER PDU, it indicates that the SME
+is a telematic device of a type which is indicated in bits 4..0.
+</p><p>If bit 5 has value 0 in an SMS-DELIVER PDU, the value in bits 4..0 indicates
+the SM-AL protocol being used between the SME and the MS.
+</p><p>Note that for the straightforward case of simple MS-to-SC short message
+transfer the Protocol Identifier is set to the value 0.
+</p><p>In the case where bit 7 = 0, bit 6 = 1, bits 5..0 are used as defined
+below
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Bits 5..0</td><td>Description</td></tr>
+<tr><td>000000</td><td>Short Message Type 0</td></tr>
+<tr><td>000001</td><td>Replace Short Message Type 1</td></tr>
+<tr><td>000010</td><td>Replace Short Message Type 2</td></tr>
+<tr><td>000011</td><td>Replace Short Message Type 3</td></tr>
+<tr><td>000100</td><td>Replace Short Message Type 4</td></tr>
+<tr><td>000101</td><td>Replace Short Message Type 5</td></tr>
+<tr><td>000110</td><td>Replace Short Message Type 6</td></tr>
+<tr><td>000111</td><td>Replace Short Message Type 7</td></tr>
+<tr><td>001000..011110</td><td>Reserved</td></tr>
+<tr><td>011111</td><td>Return Call Message</td></tr>
+<tr><td>100000..111100</td><td>Reserved</td></tr>
+<tr><td>111101</td><td>ME Data download</td></tr>
+<tr><td>111110</td><td>ME De-personalization Short MEssage</td></tr>
+<tr><td>111111</td><td>SIM Data download</td></tr>
+</tbody></table>
+
+</p><p>A short message type 0 indicates that the ME must acknowledge receipt
+of the short message but may discard its contents.
+</p><p>The Replace Short Message feature is optional for the ME and the SIM
+but if implemented it shall be performed as descriped here.
+</p><p>For MT short messages, on receipt of a short message from from the SC,
+the MS shall check to see if the associated Protocol Identifier contains
+a Replace Short Message Type code.
+</p><p>If such a code is present, the the MS will check the originating address
+and replace any existing stored message having the same Protocol Identifier
+code and originating address with the new short message and other parameter
+values. If there is no message to be replaced, the MS shall store the message
+in the normal way. The MS may also check the SC address as well as the
+Originating Address. However, in a network which has multiple SCs, it is
+possible for a Replace Message type for a SM to be sent via different SCs
+and so it is recommended that the SC address should not be checked by the
+MS unless the application specifically requires such a check.
+</p><p>If a Replace Short Message Type code is not present then the MS will
+will store the message in the normal way.
+</p><p>In MO short messages the SC reacts similarly but only the address of
+the originating MS or any other source is checked.
+</p><p>A Return Call Message indicates to the MS to inform the user that a
+call (e.g. a telephone call) can be established to the address specified
+within the TP-OA. The RP-OA contains the address of the SC as usual. The
+message content (if present) gives displayable information (e.g. the number
+of waiting voice messages). The message is handled in the same way as all
+other messages of the Replace Short Message Types.
+</p><p>The ME De-personalization Short Message is an ME-specific message which
+instructs the ME to de-personalities the ME (see GSM 2.22). The TP-DCS
+shall be set to Uncompressed, Default Alphabet, and Message Class 1 (Me-specific),
+which corresponds to a bit coding og 00010001. The TP-UD field contains
+de-personalization information coded according to GSM 02.22. This information
+shall not be displayed by an ME which supports the scheme. The acknowledgement
+to this message is a SMS-DELIVER-REPORT for RP-ACK in ehich the TP-User-Data
+shall be coded according to GSM 02.22.
+</p><p>SIM Data download is a facility whereby the ME must pass the short message
+in its entirety including all SMS elements contained in the SMS deliver
+to the SIM using the mechanism descriped in GSM 11.11. The DCS shall be
+set to 8 bit message class 2 (either bit coding 11110110 or 00010110).
+The entire user data field is available for SIM Data download.
+</p><p>ME Data download is facility whereby the ME shall process the short
+message in its entirety including all SMS elements contained in the SMS
+deliver to the ME. The DCS shall be set to message class 1. The entire
+user data field is available for ME data download.
+</p></blockquote>
+
+<hr width="100%">
+<h1><a name="TP-DCS"></a>Data Coding Scheme (TP-DCS)</h1>
+
+<blockquote>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td valign="TOP" align="LEFT">Coding Group Bits 7..4</td><td>Use of bits 3..0</td></tr>
+<tr><td valign="TOP">00xx</td><td>General Data Coding indication<br>Bits 5..0 indicate the following:
+
+	<table width="80%" border="">
+	<tbody><tr bgcolor="lightgreen"><td>Bit 5</td><td> </td></tr>
+	<tr><td>0</td><td>Text is uncompressed</td></tr>
+	<tr><td>1</td><td>Text is compressed</td></tr>
+	</tbody></table>
+
+	<br>
+
+	<table width="80%" border="">
+	<tbody><tr bgcolor="lightgreen"><td>Bit 4</td><td></td></tr>
+	<tr><td>0</td><td>Bits 1..0 have no meaning</td></tr>
+	<tr><td>1</td><td>Bits 1..0 indicates message class</td></tr>
+	</tbody></table>
+
+	<br>
+
+	<table width="80%" border="">
+	<tbody><tr bgcolor="lightgreen">
+	<td>Bit 3</td><td>Bit 2</td><td>Alphabet being used</td></tr>
+	<tr><td>0</td><td>0</td><td>Default alphabet</td></tr>
+	<tr><td>0</td><td>1</td><td>8 bit data</td></tr>
+	<tr><td>1</td><td>0</td><td>UCS2 (16bit)</td></tr>
+	<tr><td>1</td><td>1</td><td>Reserved</td></tr>
+	</tbody></table>
+
+	<br>
+
+	<table width="80%" border="">
+	<tbody><tr bgcolor="lightgreen"><td>Bit 1</td><td>Bit 0</td><td>Message class</td><td>Description</td></tr>
+	<tr><td>0</td><td>0</td><td>Class 0</td><td></td></tr>
+	<tr><td>0</td><td>1</td><td>Class 1</td><td>ME specific</td></tr>
+	<tr><td>1</td><td>0</td><td>Class 2</td><td>SIM specific</td></tr>
+	<tr><td>1</td><td>1</td><td>Class 3</td><td>TE specific</td></tr>
+	</tbody></table>
+
+	<p>NOTE: The special case of bits 7..0 being 0000 0000 indicates the Default Alphabet as in Phase 2</p></td></tr>
+
+<tr><td>0100..1011</td><td>Reserved coding groups</td></tr>
+
+<tr><td valign="TOP" align="LEFT">1100</td><td>Message Waiting Indication Group: Discard Message
+<p>Bits 3..0 are coded exactly the same as Group 1101, however with bits
+7..4 set to 1100 the mobile may discard the contents of the message, and
+only present the indication to the user.</p></td></tr>
+
+<tr><td valign="TOP" align="LEFT">1101</td><td>Message Waiting Indication Group: Store Message
+<p>This Group allows an indication to be provided to the user about status
+of types of message waiting on systems connected to the GSM PLMN. The mobile
+may present this indication as an icon on the screen, or other MMI indication.
+The mobile may take note of the Origination Address for message in this
+group and group 1100. For each indication supported, the mobile may provide
+storage for the Origination Address which is to control the mobile indication.
+<br>Text included in the user data is coded in the Default Alphabet.
+<br>Ehere a message is received with bits 7..4 set to 1101, the mobile
+shall store the text of the SMS message in addition to setting the indication.
+
+	<table width="80%" border="">
+	<tbody><tr bgcolor="lightgreen"><td>Bit 3</td><td>Description</td></tr>
+	<tr><td>0</td><td>Set Indication Inactive</td></tr>
+	<tr><td>1</td><td>Set Indication Active</td></tr>
+	</tbody></table>
+
+	</p><p>Bit 2 is reserved, and set to 0
+	<table width="80%" border="">
+	<tbody><tr bgcolor="lightgreen"><td>Bit 1</td><td>Bit 0</td><td>Indication Type</td></tr>
+	<tr><td>0</td><td>0</td><td>Voicemail Message Waiting</td></tr>
+	<tr><td>0</td><td>1</td><td>Fax Message Waiting</td></tr>
+	<tr><td>1</td><td>0</td><td>Electronic Mail Message Waiting</td></tr>
+	<tr><td>1</td><td>1</td><td>Other Message Waiting*</td></tr>
+	</tbody></table>
+
+</p><p>* Mobile manufacturers may implement the "Other Message Waiting" indication
+as an additional indication without specifying the meaning. The meaning
+of this indication is intended to be standardized in the future, so Operators
+should not make use of this indication until the standard for this indication
+is finalized.</p></td></tr>
+
+<tr><td valign="TOP" align="LEFT">1110</td><td>Message Waiting Indication Group: Store Message
+<p>The coding of bits 3..0 and functionality of this feature are the same
+as for the Message Waiting Indication Group above, (bits 7..4 set to 1101)
+with the exception that the text included in the user data is coded in
+the uncompressed UCS2 alphabet.</p></td></tr>
+
+<tr><td valign="TOP" align="LEFT">1111</td><td>Data coding/message class<p>Bit 3 is reserved, set to 0.
+
+	<table width="80%" border="">
+	<tbody><tr bgcolor="lightgreen"><td>Bit 2</td><td>Message coding</td></tr>
+	<tr><td>0</td><td>Default alphabet</td></tr>
+	<tr><td>1</td><td>8-bit data</td></tr>
+	</tbody></table>
+
+	<br>
+
+	<table width="80%" border="">
+	<tbody><tr bgcolor="lightgreen"><td>Bit 1</td><td>Bit 0</td><td>Message Class</td><td>Description</td></tr>
+	<tr><td>0</td><td>0</td><td>Class 0</td><td></td></tr>
+	<tr><td>0</td><td>1</td><td>Class 1</td><td>ME specific</td></tr>
+	<tr><td>1</td><td>0</td><td>Class 2</td><td>SIM specific</td></tr>
+	<tr><td>1</td><td>1</td><td>Class 3</td><td>TE specific</td></tr>
+	</tbody></table>
+
+</p></td></tr></tbody></table>
+</blockquote>
+
+<hr width="100%">
+<h1><a name="FO"></a>FO, The First Octet</h1>
+
+<blockquote>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>RP</td><td>1b</td><td>Reply Path, if 1, answer to SM is send via same SC</td></tr>
+<tr><td>UDHI</td><td>1b</td><td>User Data Header Identifier, UD starts with UDH</td></tr>
+<tr><td>SRR</td><td>1b</td><td>Status Report Request</td></tr>
+<tr><td><a href="#TP-Validity-Period-Format">VPF</a></td><td>2b</td><td>Validity Period Format</td></tr>
+<tr><td>RD</td><td>1b</td><td>Reject Duplicates</td></tr>
+<tr><td>MTI</td><td>2b</td><td>Message Type Indicator (01 = SUBMIT)</td></tr>
+</tbody></table>
+</blockquote>
+
+<hr width="100%">
+<h1><a name="TP-SCTS"></a>Service Centre Time Stamp (TP-SCTS)</h1>
+
+<blockquote>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>Year</td><td>1</td><td>These are in "<a href="#Swapped-Nibble">Swapped Nibble</a>" mode</td></tr>
+<tr><td>Month</td><td>1</td><td></td></tr>
+<tr><td>Day</td><td>1</td><td></td></tr>
+<tr><td>Hour</td><td>1</td><td></td></tr>
+<tr><td>Minute</td><td>1</td><td></td></tr>
+<tr><td>Second</td><td>1</td><td></td></tr>
+<tr><td valign="TOP" align="LEFT">Timezone</td><td valign="TOP" align="LEFT">1</td><td>Relation to GMT. One unit is 15min. If MSB=1, value is negative.</td></tr>
+</tbody></table>
+
+E.g.: 0x99 0x20 0x21 0x50 0x75 0x03 0x12 means 12. Feb 1999 05:57:30 GMT+3
+
+<h3><a name="Swapped-Nibble"></a>Swapped Nibble presentation</h3>
+
+<blockquote>
+BCD code where nibbles within octet is swapped. E.g.: 0x31 Represents value of 13
+</blockquote>
+</blockquote>
+
+<hr width="100%">
+<h1><a name="TP-Validity-Period-Format"></a>Validity Period Format (TP-VPF)</h1>
+
+<blockquote>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Bit 4</td><td>Bit 3</td><td>Format</td></tr>
+<tr><td>1</td><td>0</td><td><a href="#Relative">Relative</a></td></tr>
+<tr><td>1</td><td>1</td><td><a href="#TP_VP_Absolute">Absolute</a></td></tr>
+<tr><td>0</td><td>1</td><td>Enhanged</td></tr>
+</tbody></table>
+</blockquote>
+
+<h1><a name="TP-Validity-Period"></a>Validity Period (TP-VP)</h1>
+
+<blockquote>
+Validity period specifies the time when SM expires. If SM is't
+delivered before that moment, it is discarded by SC. Validity-Period can
+be in three different format; Relative, Absolute and Enhanged.
+
+<h3><a name="TP_VP_Relative"></a>Relative:</h3>
+
+<blockquote>
+Time relative to current moment.
+
+<table width="80%" border="">
+<tbody><tr bgcolor="lightgreen"><td>TP-VP value</td><td>Validity period value</td></tr>
+<tr><td>0 to 143</td><td>(TP-VP + 1) * 5 minutes (i.e. 5 minutes intervals up to 12 hours)</td></tr>
+<tr><td>144 to 167</td><td>12 hours + ((TP-VP - 143) * 30 minutes)</td></tr>
+<tr><td>168 to 196</td><td>(TP-VP - 166) * 1 day</td></tr>
+<tr><td>197 to 255</td><td>(TP-VP - 192) * 1 week</td></tr>
+</tbody></table>
+</blockquote>
+
+<h3><a name="TP_VP_Absolute"></a>Absolute</h3>
+
+<blockquote>
+TP-VP field is 7 octets long, containing <a href="#TP-SCTS">TP-SCTS</a>
+formatted time when SM expires.
+</blockquote>
+
+<h3><a name="TP_VPF_Enhanged"></a>Enhanged</h3>
+
+<blockquote>
+Too tired to write... RTFETSIM
+</blockquote>
+</blockquote>
+
+<hr width="100%">
+<h1><a name="Type of Address"></a>Type of Address</h1>
+
+<blockquote>
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Value</td><td>Type of address</td></tr>
+<tr><td>0x31</td><td>International without leading '+' ???</td></tr>
+<tr><td>0x91</td><td>International</td></tr>
+</tbody></table>
+<p>
+See ETSI's docs for more info.
+</p></blockquote>
+
+<hr width="100%">
+<h1><a name="Store SMS to SIM or ME [0x24]"></a>Store SMS to SIM or ME (0x24)</h1>
+
+<blockquote>
+UD is sent just like when sending, within 0x27 messages.
+<p>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>MEM</td><td>1</td><td>Memory area: 2=SIM, 3=ME</td></tr>
+<tr><td>Status</td><td>2</td><td>These two are the same as in <a href="#SM Header">received SM header</a>.</td></tr>
+<tr><td>PID</td><td>1</td><td>Protocol Identifier</td></tr>
+<tr><td>DCS</td><td>1</td><td>Data Coding Scheme</td></tr>
+<tr><td><a href="#TP-SCTS">SCTS</a></td><td>7</td><td>Service Centre Time Stamp</td></tr>
+<tr><td>UDL</td><td>1</td><td>User Data Length</td></tr>
+<tr><td>SMSC</td><td><a href="fbus.html#PNUM">PNUM</a></td><td>SM Service Centre</td></tr>
+<tr><td>OA</td><td><a href="fbus.html#PNUM">PNUM</a></td><td>Originating Address</td></tr>
+<tr><td><a href="#Type of Address">TA</a></td><td>1</td><td>Type of OA</td></tr>
+</tbody></table>
+
+</p><h3><a name="SMS Stored [0x2a]"></a>SMS Stored [0x2a]</h3>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>LOC</td><td>1</td><td>SMS memory location where stored to</td></tr>
+</tbody></table>
+
+<h3><a name="SMS Store:Error [0x2b]"></a>BZZZZ [0x2b]</h3>
+
+<table width="90%" border="">
+<tbody><tr bgcolor="lightgreen"><td>Field</td><td>Length</td><td>Description</td></tr>
+<tr><td>EID</td><td>1</td><td>Cause of BZZZZ</td></tr>
+</tbody></table>
+</blockquote>

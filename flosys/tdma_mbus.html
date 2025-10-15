@@ -1,0 +1,524 @@
+<table cols="1" nosave="" width="100%" cellspacing="0" cellpadding="0" border="0">
+<tbody><tr nosave="" bgcolor="#3333FF">
+<td style="background-color:lightgreen;padding-left:10px;"><b>TDMA NOKIA&nbsp; 5120 / 5160 / 
+6120
+/ 6160&nbsp;&nbsp;&nbsp; CDMA NOKIA 6185&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+MAY
+ / 4 / 2001</b></td>
+</tr>
+</tbody></table>
+
+<p><font size="-1">My latest research shows that the TDMA phones support
+simultaneously both MBUS protocols, the old one used for 21xx,31xx phones
+and the new 1F protocol used by the 51xx,61xx phones.</font>
+<br><font size="-1">Both protocols can be used at the same time on the MBUS.
+The phone will decode both and react accordingly.</font>
+<br><font size="-1">The old MBUS frame structure can be found in the MBUS
+documentation on the <a href="oldmbus.html">HERE</a>.</font>
+</p><p><font size="-1">Here are the few frames used by a 3Com cellular modem
+card:</font>
+</p><p><tt>reg cellmodem:&nbsp;&nbsp;&nbsp; <font color="#CC33CC">00 F8</font>
+05 <font color="#FF0000">E9</font> <font color="#33CC00">01 01 1C 01 1C
+</font><font color="#FFCC00">SQ
+</font><font color="#3333FF">CS</font></tt>
+<br><tt>reg response:&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC33CC">F8
+00</font> 7E <font color="#33CC00">1C 01 1C</font> <font color="#FFCC00">SQ
+</font><font color="#3333FF">CS</font></tt>
+</p><p><tt>unknown purpose : <font color="#CC33CC">00 E0</font> 00 <font color="#FF0000">1D
+</font><font color="#FFCC00">SQ
+</font><font color="#3333FF">CS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">probably
+request Alive response from cellmodem</font></font></font>
+</p><p><tt>UC_RESERVE_REQ:&nbsp;&nbsp; <font color="#CC33CC">00 E0</font> 05
+<font color="#FF0000">19
+</font><font color="#33CC00">00
+00 01 01 00 </font><font color="#FFCC00">SQ </font><font color="#3333FF">CS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">register
+sytem state info presentation</font></font></font>
+</p><p><tt>UC_RESERVE_REQ:&nbsp;&nbsp; <font color="#CC33CC">E0 00</font> 01
+<font color="#CC33CC">CD</font>
+01
+<font color="#FFCC00">SQ</font> <font color="#3333FF">CS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">phone
+tries to register some info from cellmodem</font></font></font>
+</p><p><tt>LN_KEY_REQ:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC33CC">00
+E0</font> 02 <font color="#FF0000">17</font> <font color="#009900">01 KEYNUM
+</font><font color="#FFCC00">SQ
+</font><font color="#3333FF">CS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">push
+key</font></font></font>
+<br><tt>LN_KEY_REQ:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC33CC">00
+E0</font> 02 <font color="#FF0000">17</font> <font color="#009900">00 KEYNUM
+</font><font color="#FFCC00">SQ
+</font><font color="#3333FF">CS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">release
+key</font></font></font>
+</p><p><font color="#FF6600"><font size="-1">Dialing as cellmodem forces the
+phone into analoge AMPS mode, answering a call as cellmodem answers in
+AMPS mode</font></font>
+<br><font color="#FF6600"><font size="-1">This allows transparent transmission
+of the analoge modem tones since digital TDMA won't transmit them transparently.</font></font>
+<br><font color="#FF6600"><font size="-1">It also switches audio to the XEAR
+, XMIC pins automatically.</font></font>
+</p><p><tt>LN_ALIVE_REQ:&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC33CC">E0 00</font>
+00 <font color="#CC33CC">1E</font> <font color="#FFCC00">SQ</font> <font color="#3333FF">CS</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">checks
+if cellmodem is still present (sent&nbsp; 1 /sec.)</font></font></font>
+</p><p><tt>SYS_STATE_IND:&nbsp;&nbsp;&nbsp; <font color="#CC33CC">FF 02</font>
+07 <font color="#FF0000">CA</font> <font color="#33CC00">1C Con 02 01 0E
+0F 00</font> <font color="#FFCC00">SQ</font> <font color="#3333FF">CS&nbsp;&nbsp;
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">sytems
+state information</font></font></font>
+<br><font color="#3333FF"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</tt><font face="Arial,Helvetica"><font size="-1">Con holds the connection
+state</font></font></font>
+<br><tt><font color="#3333FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+00
+ = idle</font></tt>
+<br><tt><font color="#3333FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+01
+ = ringing</font></tt>
+<br><tt><font color="#3333FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+02
+ = connecting</font></tt>
+<br><tt><font color="#3333FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+03
+ = talk</font></tt>
+<br><tt><font color="#3333FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+04
+ = ringing / alternating with 01</font></tt>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>&nbsp;&nbsp;<font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">the
+other data fields are mainly fixed after phone has registered</font></font></font>
+<br><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+the
+ destignation is the Global object and the source is subaddress 02 of
+the Nokia phone.</font></font></font>
+<br>&nbsp;
+</p><p><b>MBUS frames </b>(new format)<b>:</b>
+</p><p><tt><font color="#993300">1F&nbsp;&nbsp;&nbsp; = protocol identifier
+</font><font color="#000000">1F=MBUS
+, 1E=FBUS, 1C=IrDa</font></tt>
+<br><tt><font color="#CC33CC">00&nbsp;&nbsp;&nbsp; = destignation address
+</font>00=phone,
+10=Sevice Software, 1D=PC</tt>
+<br><tt><font color="#CC33CC">1D&nbsp;&nbsp;&nbsp; = source address</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+00=phone, 04=Carkit, 10=Sevice Software, 1D=PC, 48=DLR3 cable, F8=unknown
+target, FF=global target</tt>
+<br><tt><font color="#FF0000">40&nbsp;&nbsp;&nbsp; = command</font></tt>
+<br><tt>00 05 = data length</tt>
+<br><tt><font color="#006600">00 01 = data field (some fixed header)</font></tt>
+<br><tt><font color="#33CC00">47... = more data</font></tt>
+<br><tt><font color="#FFCC00">SQ&nbsp;&nbsp;&nbsp; = sequence number 2...63</font></tt>
+<br><tt><font color="#3333FF">CS&nbsp;&nbsp;&nbsp; = checksum&nbsp; XOR
+of all bytes</font></tt>
+<br>&nbsp;
+</p><p><b><u><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">register
+commands:</font></font></font></u></b>
+</p><p><tt>Register req:&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC33CC">00 F8</font>
+05 <font color="#FF0000">E9</font>&nbsp;&nbsp;&nbsp; <b><font color="#33CC00">00
+02 1D 00 1D</font></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#FFCC00">02
+</font><font color="#3333FF">3C
+
+</font></tt><font face="Arial,Helvetica"><font size="-1"><font color="#666666">(old
+2110 style)&nbsp; </font><font color="#3333FF">register device 1D</font></font></font>
+<br>&nbsp;
+<br>&nbsp;
+</p><p><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1"><b><u>0x40
+commands:&nbsp;</u></b>&nbsp;&nbsp; (usually direct register r/w commands)</font></font></font>
+</p><p><b><tt><font color="#000000">kind of end:&nbsp; </font><font color="#CC6600">1F
+</font><font color="#CC33CC">00
+10</font><font color="#33CC00"> </font><font color="#FF0000">40
+</font><font color="#000000">00
+04</font><font color="#33CC00"> </font><font color="#006600">00 01</font><font color="#33CC00">
+64 01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font><font color="#FFCC00">SQ
+</font><font color="#3333FF">CS
+</font></tt></b><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">sent
+by Service Software when exiting</font></font></font>
+</p><p><tt>Rd phonebook:&nbsp; <font color="#CC6600">1F</font> <font color="#CC33CC">00
+1D</font> <b><font color="#FF0000">40</font></b> 00 07 <font color="#006600">00
+01</font><font color="#33CC00"> 1F 01 04 86 NO</font>&nbsp;&nbsp; <font color="#FFCC00">SQ
+</font><font color="#3333FF">CS
+
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">read
+phonebook location NO (high level)</font></font></font>
+<br><tt>Rd phonebook:&nbsp; <font color="#993300">1F</font> <font color="#CC33CC">00
+7F</font> <font color="#FF0000">40 </font>00 08 <font color="#003300">00
+00</font> <font color="#33CC00">07 11 00 10 00 NO</font> <font color="#FFCC00">SQ
+</font><font color="#3333FF">CS
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">same
+phonebook read more low level (works also on CDMA 6185)</font></font></font>
+<br><tt>Wr phonebook:&nbsp; <font color="#993300">1F</font> <font color="#CC33CC">00
+1D</font> <font color="#FF0000">40 </font>00 LN <font color="#003300">00
+01</font> <font color="#33CC00">1F 01 04 87 NO phone# 00 Name 00 </font><font color="#FFCC00">SQ
+</font><font color="#3333FF">CS</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">write
+phonebook - phone# / name are ASCII strings</font></font></font>
+<br>&nbsp;
+<br>&nbsp;
+</p><p><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1"><b><u>0x4E
+commands:&nbsp;</u></b>&nbsp;&nbsp; (sent from a 5160i TDMA / 6160i TDMA
+/ 6185 CDMA&nbsp; or 7110 GSM phone to the uC in the DLR-3 cable)</font></font></font>
+</p><p><tt>DLR-3 req:&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC6600">1F </font><font color="#CC33CC">48
+00</font> <b><font color="#FF0000">4E</font></b> 00 02 <font color="#006600">01
+XX</font><font color="#33CC00"> </font><font color="#FFCC00">SQ
+</font><font color="#3333FF">CS
+
+</font></tt><font face="Arial,Helvetica"><font size="-1"><font color="#3333FF">frame
+sent from the phone to the DLR-3 cable </font><font color="#333333">(after
+15kOhm resistor detected betw. XMIC (3)&nbsp; and DGND (9).)</font></font></font>
+<br><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+DLR-3
+ needs only to ACK every frame from Nokia phone on MBUS to maintain
+DLR-3 mode.</font></font></font>
+</p><p><font face="Arial,Helvetica"><font color="#000000"><font size="-1">DLR-3
+mode = enable a 19.200 bit/s AT-command set interface on the FBUS-TX and
+FBUS-RX lines.</font></font></font>
+<br><font face="Arial,Helvetica"><font color="#000000"><font size="-1">DLR-3
+modes are especailly useful for the new "REAL" digital data modes in TDMA
+networks. Also for CDMA data modes and High speed GSM&nbsp; (HSCSD) data
+on GSM.</font></font></font>
+</p><p><font face="Arial,Helvetica"><font color="#666666"><font size="-1">Flow
+control lines are DSR,DCD,CTS arecoded into the 2nd databyte XX:</font></font></font>
+<br><font face="Arial,Helvetica"><font color="#000000"><font size="-1">bit.0&nbsp;&nbsp;&nbsp;
+=&nbsp;&nbsp;&nbsp; /CTS&nbsp; (negative logic)</font></font></font>
+<br><font face="Arial,Helvetica"><font color="#000000"><font size="-1">bit.1&nbsp;&nbsp;&nbsp;
+=&nbsp;&nbsp;&nbsp; /DCD (negative logic)</font></font></font>
+<br><font face="Arial,Helvetica"><font color="#000000"><font size="-1">bit.2&nbsp;&nbsp;&nbsp;
+=&nbsp;&nbsp;&nbsp; CMD / DATA</font></font></font>
+<br><font face="Arial,Helvetica"><font color="#000000"><font size="-1">bit.3&nbsp;&nbsp;&nbsp;
+=&nbsp;&nbsp;&nbsp; DSR</font></font></font>
+<br><font face="Arial,Helvetica"><font color="#000000"><font size="-1">bit.4-7=0</font></font></font>
+</p><p><font face="Arial,Helvetica"><font color="#666666"><font size="-1">See
+more information how to build a DLR-3 cable here: <a href="index.php?lang=eng&page=intres/atrox/main">Adrians
+Datacable pages</a></font></font></font>
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+</p><p><font face="Arial,Helvetica"><font size="-1"><font color="#3333FF"><b><u>0x78
+/ 0x79 commands:&nbsp;</u></b>&nbsp;&nbsp; (used by handsfree carkit) </font><font color="#33CC00">Works
+also on GSM phones (5110 / 6110 / etc)</font></font></font>
+<br><font face="Arial,Helvetica"><font color="#333333"><font size="-1">These
+commands are used by the Nokia Carkits to switch the phone audio path to
+XMiC and XEAR , turn the phone on/off according to the car ignition, and
+control the</font></font></font>
+<br><font face="Arial,Helvetica"><font color="#333333"><font size="-1">PA
+loudspeaker amplifier in the carkit and the car radio mute output which
+silences the car radio during a call</font></font></font>
+</p><p><tt>mute status tone:&nbsp; <font color="#CC6600">1F</font> <font color="#CC33CC">04
+00</font> <b><font color="#FF0000">78</font></b> 00 04 <font color="#006600">01
+02</font><font color="#33CC00"> </font><font color="#33CCFF">0E</font><font color="#33CC00">
+00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font><font color="#FFCC00">SQ</font><font color="#3333FF">CS
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">status
+indication&nbsp; = disable carkit audio amplifier (no audio / no tone)</font></font></font>
+<br><tt>mute status tone:&nbsp; <font color="#CC6600">1F</font> <font color="#CC33CC">04
+00</font> <b><font color="#FF0000">78</font></b> 00 04 <font color="#006600">01
+02</font><font color="#33CC00"> </font><font color="#33CCFF">0E </font><font color="#33CC00">03&nbsp;&nbsp;&nbsp;&nbsp;
+
+</font><font color="#FFCC00">SQ</font> <font color="#3333FF">CS </font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">status
+indication&nbsp; = enable carkit audio amplifier (audio /&nbsp; tone present)</font></font></font>
+</p><p><tt>mute status call:&nbsp; <font color="#CC6600">1F</font> <font color="#CC33CC">04
+00</font> <b><font color="#FF0000">78</font></b> 00 04 <font color="#006600">01
+02</font><font color="#33CC00"> </font><font color="#33CCFF">07 </font><font color="#33CC00">00&nbsp;&nbsp;&nbsp;&nbsp;
+
+</font><font color="#FFCC00">SQ</font> <font color="#3333FF">CS </font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">status
+indication&nbsp; = disable radio mute output (no call)</font></font></font>
+<br><tt>mute status call:&nbsp; <font color="#CC6600">1F</font> <font color="#CC33CC">04
+00</font> <b><font color="#FF0000">78</font></b> 00 04 <font color="#006600">01
+02</font><font color="#33CC00"> </font><font color="#33CCFF">07 </font><font color="#33CC00">01&nbsp;&nbsp;&nbsp;&nbsp;
+
+</font><font color="#FFCC00">SQ</font> <font color="#3333FF">CS </font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">status
+indication&nbsp; = enable radio mute output&nbsp; (call active )</font></font></font>
+</p><p><tt>enable ???:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC6600">1F
+</font><font color="#CC33CC">04
+00</font> <b><font color="#FF0000">78</font></b> 00 04 <font color="#006600">01
+02</font><font color="#33CC00"> </font><font color="#33CCFF">08</font><font color="#33CC00">
+01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font><font color="#FFCC00">SQ</font><font color="#3333FF">CS
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">status
+indication&nbsp; = enable ???&nbsp; sent to HFU-2 on power on</font></font></font>
+</p><p><tt><font color="#33CCFF">byte 9 (07,08,0E) </font><font color="#993300">seems
+to be a pointer to a memory location ,</font><font color="#FFCC00"> </font><b><font color="#33FF33">byte
+10 </font></b><font color="#993300">is the data at this memeory location.</font></tt>
+</p><p><tt>response from HFU: <font color="#CC6600">1F</font> <font color="#CC33CC">00
+04</font> <b><font color="#FF0000">78</font></b> 00 03 <font color="#006600">02
+01</font><font color="#33CC00"> 03&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+</font><font color="#FFCC00">SQ</font> <font color="#3333FF">CS </font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">response
+message from HFU-2&nbsp; (use unknown)</font></font></font>
+</p><p><tt>go HF and IGN on:&nbsp; <font color="#CC6600">1F</font> <font color="#CC33CC">00
+04</font> <b><font color="#FF0000">79</font></b> 00 05 <font color="#006600">02
+01</font><font color="#33CC00"> 01 </font><font color="#FF6600">63</font><font color="#33CC00">
+00&nbsp;&nbsp;&nbsp; </font><font color="#FFCC00">SQ </font><font color="#3333FF">CS
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">enables
+carkit mode + turns phone on&nbsp; + req. mute status</font></font></font>
+<br><tt>go HF and IGN off: <font color="#CC6600">1F</font> <font color="#CC33CC">00
+04</font> <b><font color="#FF0000">79</font></b> 00 05 <font color="#006600">02
+01</font><font color="#33CC00"> 01 </font><font color="#FF6600">61</font><font color="#33CC00">
+00&nbsp;&nbsp;&nbsp; </font><font color="#FFCC00">SQ </font><font color="#3333FF">CS
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">enables
+carkit mode + powers phone off (1 min delay) + req. mute status</font></font></font>
+</p><p><tt>ext. HS Offhk:&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC6600">1F
+</font><font color="#CC33CC">00
+04</font> <b><font color="#FF0000">79</font></b> 00 05 <font color="#006600">02
+01</font><font color="#33CC00"> 01 </font><font color="#FF6600">23</font><font color="#33CC00">
+00&nbsp;&nbsp;&nbsp; </font><font color="#FFCC00">SQ </font><font color="#3333FF">CS
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">enables
+carkit mode + external handset lifted&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+(OFF-Hook)</font></font></font>
+<br><tt>ext. HS Onhk:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC6600">1F
+</font><font color="#CC33CC">00
+04</font> <b><font color="#FF0000">79</font></b> 00 05 <font color="#006600">02
+01</font><font color="#33CC00"> 01 </font><font color="#FF6600">63</font><font color="#33CC00">
+00&nbsp;&nbsp;&nbsp; </font><font color="#FFCC00">SQ </font><font color="#3333FF">CS
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">enables
+carkit mode + external handset put back (ON-Hook)</font></font></font>
+</p><p><tt><u><font color="#FF6600">Ignition and Hook are coded into one byte</font></u></tt>
+<br><tt><font color="#333333">bit.0 = 0:on power on 1:when in operation</font></tt>
+<br><tt><font color="#333333">bit.1 = IGNITION STATUS</font></tt>
+<br><tt><font color="#333333">bit.2 = x&nbsp; can be 1 or 0</font></tt>
+<br><tt><font color="#333333">bit.3 = 0</font></tt>
+<br><tt><font color="#333333">bit.4 = 0</font></tt>
+<br><tt><font color="#333333">bit.5 = 1</font></tt>
+<br><tt><font color="#333333">bit.6 = Hook (inverted)</font></tt>
+<br><tt><font color="#333333">bit.7 = 0</font></tt>
+</p><p><tt>HFU-2 version:&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC6600">1F</font><font color="#CC33CC">00
+04</font> <b><font color="#FF0000">79</font></b> 00 12 <font color="#006600">02
+01</font><font color="#33CC00"> 02 06 00 56 20 30 36 2E 30 30 0A 48 46
+55 32 00 </font><font color="#FFCC00">SQ
+</font><font color="#3333FF">CS
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">HFU-2
+version string</font></font></font>
+<br><tt><font color="#33CC00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0&nbsp; 6&nbsp; .&nbsp; 0&nbsp; 0 LF&nbsp;
+H&nbsp; F&nbsp; U&nbsp; 2</font></tt>
+<br><b><u><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">0xD0
+commands:</font></font></font></u></b>
+</p><p><tt>init:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC6600">1F
+</font><font color="#CC33CC">00
+1D</font> <font color="#FF0000">D0</font> 00 01
+<font color="#33CC00">04&nbsp;</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#FFCC00">SQ</font> <font color="#3333FF">CS&nbsp;&nbsp; </font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">sent
+by the Service Software or HFU-2&nbsp; on startup</font></font></font>
+<br><tt>init resp:&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC6600">1F </font><font color="#CC33CC">1D
+00</font> <font color="#FF0000">D0</font> 00 01
+<font color="#33CC00">05</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#FFCC00">SQ</font> <font color="#3333FF">CS&nbsp;&nbsp; </font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">response
+from phone to above frame</font></font></font>
+<br>&nbsp;
+<br>&nbsp;
+</p><p><b><u><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">0xD1
+commands:</font></font></font></u></b>
+</p><p><tt>undefind behv.:<font color="#CC6600">1F</font> <font color="#CC33CC">00
+1D</font> <b><font color="#FF0000">D1</font></b> 00 05 <font color="#006600">00
+01</font><font color="#33CC00"> </font><font color="#003300">47</font><font color="#33CC00">
+00 00</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#FFCC00">SQ
+</font><font color="#3333FF">CS&nbsp;&nbsp; </font></tt><b><font face="Arial,Helvetica"><font color="#FF0000"><font size="-1">Caution
+- might delete data</font></font></font></b>
+<br><tt>unknown&nbsp;&nbsp;&nbsp;&nbsp; :&nbsp; <font color="#CC6600">1F
+</font><font color="#CC33CC">00
+1D</font> <b><font color="#FF0000">D1</font></b> 00 05 <font color="#006600">00
+01</font><font color="#33CC00"> </font><font color="#003300">47</font><font color="#33CC00">
+00 05</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#FFCC00">SQ
+</font><font color="#3333FF">CS&nbsp;&nbsp; </font></tt><b><font face="Arial,Helvetica"><font color="#FF0000"><font size="-1">Caution
+- might delete data</font></font></font></b>
+</p><p><tt>registr. req:&nbsp; <font color="#993300">1F</font> <font color="#CC33CC">00
+1D</font> <font color="#FF0000">D1</font> 00 09 <font color="#009900">00
+F8 05 E9 00 02 1D 00 1D</font> <font color="#FFCC00">SQ</font> <font color="#3333FF">CS</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">new
+style registration request</font></font></font>
+</p><p><font color="#000099">for the TDMA 516x, 616x phones:</font>
+<br><tt>key-press:&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC6600">1F </font><font color="#CC33CC">00
+1D</font> <b><font color="#FF0000">D1</font></b> 00 06 <font color="#006600">00
+01</font><font color="#33CC00"> </font><font color="#003300">50</font><font color="#33CC00">
+00 01 KY</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#FFCC00">SQ
+</font><font color="#3333FF">CS
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">dials
+in digital TDMA default mode</font></font></font>
+<br><tt>key-release 1: <font color="#CC6600">1F</font> <font color="#CC33CC">00
+1D</font> <b><font color="#FF0000">D1</font></b> 00 06 <font color="#006600">00
+01</font><font color="#33CC00"> </font><font color="#003300">50</font><font color="#33CC00">
+00 00 KY</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#FFCC00">SQ
+</font><font color="#3333FF">CS</font></tt>
+<br><tt>key-release 2: <font color="#CC6600">1F</font> <font color="#CC33CC">00
+1D</font> <b><font color="#FF0000">D1</font></b> 00 06 <font color="#006600">00
+01</font><font color="#33CC00"> </font><font color="#003300">51</font><font color="#33CC00">
+00 01 KY</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#FFCC00">SQ
+</font><font color="#3333FF">CS</font></tt>
+</p><p><font color="#000066">for the CDMA phone 6185:</font>
+<br><tt>key-press:&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC6600">1F </font><font color="#CC33CC">00
+1D</font> <b><font color="#FF0000">D1</font></b> 00 06 <font color="#006600">00
+01</font><font color="#33CC00"> </font><font color="#003300">51</font><font color="#33CC00">
+00 01 KY</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#FFCC00">SQ
+</font><font color="#3333FF">CS
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">dials
+in digital CDMA default mode</font></font></font>
+<br><tt>key-release 2: <font color="#CC6600">1F</font> <font color="#CC33CC">00
+1D</font> <b><font color="#FF0000">D1</font></b> 00 06 <font color="#006600">00
+01</font><font color="#33CC00"> </font><font color="#003300">52</font><font color="#33CC00">
+00 01 KY</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#FFCC00">SQ
+</font><font color="#3333FF">CS</font></tt>
+<br>&nbsp;
+</p><p><font color="#000066">for the 7110 GSM and 7160 TDMA phones:</font>
+<br><tt>key-press:&nbsp;&nbsp;&nbsp;&nbsp; <font color="#CC6600">1F </font><font color="#CC33CC">00
+1D</font> <b><font color="#FF0000">D1</font></b> 00 06 <font color="#006600">00
+01</font><font color="#33CC00"> 46 00 01 KY</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#FFCC00">SQ
+</font><font color="#3333FF">CS </font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">dials
+in digital default mode</font></font></font>
+<br><tt>key-release 1: <font color="#CC6600">1F</font> <font color="#CC33CC">00
+1D</font> <b><font color="#FF0000">D1</font></b> 00 06 <font color="#006600">00
+01</font><font color="#33CC00"> </font><font color="#003300">47</font><font color="#33CC00">
+00 01 KY</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#FFCC00">SQ
+</font><font color="#3333FF">CS</font></tt>
+<br>&nbsp;
+</p><p><font color="#000099">for all phones:</font>
+<br><tt>req phone ID:&nbsp; <font color="#CC6600">1F</font> <font color="#CC33CC">00
+10</font> <b><font color="#FF0000">D1 </font></b>00 05 <b><font color="#006600">00
+01</font><font color="#33CC00"> 00 03 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font color="#FFCC00">SQ </font><font color="#3333FF">CS</font></b></tt>
+<br><tt><font color="#000000">req. version:&nbsp; </font><font color="#993300">1F
+</font><font color="#CC33CC">00
+1D</font><font color="#3333FF"> </font><font color="#FF0000">D1
+</font><font color="#000000">00
+07</font><font color="#3333FF"> </font><font color="#003300">00 01 </font><font color="#009900">00
+0D 00 00 02</font><font color="#3333FF">&nbsp;&nbsp;&nbsp;&nbsp; 
+</font><font color="#FFCC00">SQ</font><font color="#3333FF">
+CS&nbsp; </font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">requests
+a version information from phone</font></font></font>
+<br>&nbsp;
+</p><p><font color="#000066">Keypress codes:</font>
+<br><tt>01..09&nbsp; =&nbsp;&nbsp;&nbsp;&nbsp; "1...9"</tt>
+<br><tt>0x0A&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; "0"</tt>
+<br><tt>0x0B&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; "*"</tt>
+<br><tt>0x0C&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; '#"</tt>
+<br><tt>0x0D&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; POWER</tt>
+<br><tt>0x0E&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; YES</tt>
+<br><tt>0x0F&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; NO</tt>
+<br><tt>0x10&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; VOLUME + (ARROW UP)</tt>
+<br><tt>0x11&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; VOLUME - (ARROW DOWN)</tt>
+<br><tt>0x12&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; CLEAR</tt>
+<br><tt>0x13&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; MENU LEFT</tt>
+<br><tt>0x14&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; MENU RIGHT</tt>
+<br><tt>...</tt>
+<br><tt>0x17&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; MENU UP</tt>
+<br><tt>0x18&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; MENU DOWN</tt>
+<br><tt>0x19&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; MENU SELECT</tt>
+<br><tt>...</tt>
+<br><tt>0x1F&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; (some kind of reset)</tt>
+</p><p><font color="#000099">Keypress commands shall be followed by key release
+commands.</font>
+<br><font color="#000099">On certain phones if a keypress is followed by
+another keypress the release can be omitted.</font>
+<br><font color="#000099">The time between keypress and keyrelease can
+be short (&lt; 200 msec.) or long (&gt; 700msec.)</font>
+<br><font color="#000099">These keypresses have exactly the same effect
+as pushing the keys on the phone.</font>
+<br>&nbsp;
+</p><p><b><u><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">0xD2
+responses:</font></font></font></u></b>
+</p><p><tt><font color="#330000">Keypress resp: </font><font color="#993300">1F
+</font><font color="#CC33CC">1D
+00</font><font color="#330000"> </font><font color="#FF0000">D2</font><font color="#330000">
+00 04 </font><font color="#003300">01 00</font><font color="#330000"> </font><font color="#33CC00">50
+00</font><font color="#330000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font color="#FFCC00">SQ
+</font><font color="#3333FF">CS</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">returned
+from phone after receiving a keypress frame</font></font></font>
+</p><p><tt>D1 47 resp.&nbsp;&nbsp;&nbsp; <font color="#993300">1F</font> <font color="#CC33CC">1D
+00 </font><font color="#FF0000">D2</font> 00 04 <font color="#006600">01
+00</font> <font color="#33CC00">47 00</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#FFCC00">SQ
+</font><font color="#3333FF">CS</font></tt>
+</p><p><tt><font color="#330000">ID response:&nbsp;&nbsp; </font><font color="#CC6600">1F
+</font><font color="#CC33CC">10
+00</font><font color="#330000"> </font><b><font color="#FF0000">D2</font></b><font color="#330000">
+00 24 </font><b><font color="#006600">01 00</font><font color="#33CC00">
+00 03</font></b></tt>
+<br><b><tt><font color="#33CC00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+56
+ 20 30 33 2E 34 37 
+0A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font color="#333333">V 03.47</font></tt></b>
+<br><b><tt><font color="#33CC00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+31
+ 35 2D 30 37 2D 39 39 0A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font><font color="#333333">15/7/99</font></tt></b>
+<br><b><tt><font color="#33CC00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+4E
+ 53 57 2D 31 
+0A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font color="#333333">NSW-1</font></tt></b>
+<br><b><tt><font color="#33CC00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+28
+ 63 29 20 4E 4D 50 2E 00&nbsp;&nbsp;&nbsp; </font><font color="#FFCC00">SQ
+</font><font color="#3333FF">CS</font><font color="#33CC00">&nbsp;&nbsp;</font><font color="#333333">&nbsp;
+(c) NMP.</font></tt></b>
+</p><p><tt>version resp:&nbsp; <font color="#993300">1F</font> <font color="#CC33CC">1D
+00</font> <font color="#FF0000">D2</font> 00 11 <font color="#006600">01
+00</font> <font color="#33CC00">00 0D</font></tt>
+<br><tt><font color="#33CC00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+56
+ 20 30 33 2E 30 32 
+0A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font color="#000000">V 03.02</font></tt>
+<br><tt><font color="#33CC00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+31
+ 38 2D 31 31</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#FFCC00">SQ
+</font><font color="#3333FF">CS</font>&nbsp;&nbsp;&nbsp;
+18-11</tt>
+</p><p><tt><font color="#000000">reg response:&nbsp; </font><font color="#993300">1F
+</font><font color="#CC33CC">1D
+00</font><font color="#3333FF"> </font><font color="#FF0000">D2
+</font><font color="#000000">00
+0A</font><font color="#3333FF"> </font><font color="#33CC00">F8 00 05 06
+AB CD EF AB CD EF</font><font color="#3333FF"> </font><font color="#FFCC00">SQ</font><font color="#3333FF">
+CS<font size="-1">&nbsp;&nbsp;&nbsp; </font></font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">response
+to new registration request</font></font></font>
+<br>&nbsp;
+<br>&nbsp;
+</p><p><b><u><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">0xD8
+registration:</font></font></font></u></b>
+</p><p><tt><font color="#000000">answ:&nbsp;</font><font color="#3333FF">&nbsp;&nbsp;
+</font><font color="#CC6600">1F</font><font color="#3333FF"> </font><font color="#CC33CC">F8
+00</font><font color="#3333FF"> </font><font color="#FF0000">D8 </font><font color="#000000">00
+01</font><font color="#3333FF"> </font><font color="#33CC00">55</font><font color="#3333FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font color="#FFCC00">SQ</font><font color="#3333FF"> CS&nbsp;&nbsp;&nbsp;&nbsp;</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">&nbsp;&nbsp;
+response to old registration request</font></font></font>
+<br>&nbsp;
+</p><p><b><u><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">0xDA
+frame:</font></font></font></u></b>
+</p><p><tt>for HFU-2:&nbsp; <font color="#CC6600">1F</font> <font color="#CC33CC">04
+00</font> <b><font color="#FF0000">DA</font></b> 00 02 <font color="#006600">00
+02</font><font color="#33CC00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+</font><font color="#FFCC00">SQ</font> <font color="#3333FF">CS&nbsp;
+
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">function
+unknown - sent from Nokia phone to HFU-2mute output&nbsp; (call active
+)</font></font></font>
+<br>&nbsp;
+</p><p><b><u><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">0x7F
+ACK frames:</font></font></font></u></b>
+</p><p><tt><font color="#330000">ACK frame:&nbsp;&nbsp;&nbsp; </font><font color="#993300">1F
+</font><font color="#CC33CC">1D
+00</font><font color="#330000"> 7F </font><font color="#FFCC00">SQ
+</font><font color="#3333FF">CS</font><font color="#330000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#3333FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font></tt><font face="Arial,Helvetica"><font color="#3333FF"><font size="-1">Acknowledge
+for every received frameframe</font></font></font>
+<br>&nbsp;
+</p><p><b><u><font face="Arial,Helvetica"><font color="#FF9900"><font size="-1">Checksum
+problem:</font></font></font></u></b>
+<br><font face="Arial,Helvetica"><font color="#333333"><font size="-1">It
+seems&nbsp; that some phones have problems with a checksum of 1F. The frame
+will be recognized but it will not respond with a ACK frame.</font></font></font>
+<br><font face="Arial,Helvetica"><font color="#333333"><font size="-1"><b>Workaround:</b>
+If the checksum will be 1F , increment the sequence number so that the
+checksum will be different., recalculate the checksum then and send.</font></font></font>
+<br>&nbsp;
+<br>&nbsp;
+<br>
+</p><center>
+<p>Please send any comments, new commands or any information to: <i><a href="mailto:arnu@flosysinc.com">arnu@flosysinc.com</a></i>
+<br>Thanks to Adrian Dabrowski, Stephen Huh and Pablo Enrico for their
+contributions to this page.</p></center>
